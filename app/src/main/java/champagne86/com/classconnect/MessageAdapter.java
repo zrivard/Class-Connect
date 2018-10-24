@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 
@@ -17,12 +19,14 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter {
 
     private List<Message> messageList;
+    private FirebaseUser mUser;
 
     public static final int SENDER = 0;
     public static final int RECEIVER = 1;
 
-    public MessageAdapter(Context context, List messages) {
+    public MessageAdapter(Context context, List messages, FirebaseUser user) {
         messageList = messages;
+        mUser = user;
     }
 
 
@@ -89,7 +93,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
 
         //CHANGE USER TO USER ID WHEN NECESSARY
-        if (message.getSenderName().equals("USER")) {
+        if (message.getSenderName().equals(mUser.getUid())) {
             return SENDER;
         } else {
             return RECEIVER;

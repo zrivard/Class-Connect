@@ -28,6 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 
 public class ChatroomActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class ChatroomActivity extends AppCompatActivity {
 
 
     private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
 
     private static final String CHAT_URL = "https://classconnect-220321.appspot.com/";
@@ -57,7 +60,7 @@ public class ChatroomActivity extends AppCompatActivity {
                     int thisId;
                     try {
 
-                        senderName = data.getString("senderName");
+                        senderName = data.getString("sender");
                         message = data.getString("message");
                         thisId = data.getInt("id");
                     } catch (JSONException e) {
@@ -110,7 +113,8 @@ public class ChatroomActivity extends AppCompatActivity {
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
         mAuth = FirebaseAuth.getInstance();
-        mAdapter = new MessageAdapter(getBaseContext(), messageList);
+        mUser = mAuth.getCurrentUser();
+        mAdapter = new MessageAdapter(getBaseContext(), messageList, mUser);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -143,7 +147,7 @@ public class ChatroomActivity extends AppCompatActivity {
                 try {
                     args.put("id", id++);
                     args.put("message", chatMsgInput.getText().toString());
-                    args.put("senderName", "USER");
+                    args.put("sender", mUser.getUid());
                 }
                 catch (JSONException e) { }
 
