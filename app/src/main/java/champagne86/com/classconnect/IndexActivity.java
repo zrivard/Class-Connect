@@ -29,14 +29,11 @@ import java.util.Arrays;
 
 public class IndexActivity extends AppCompatActivity implements View.OnClickListener{
 
-    //private static final String TAG = "FacebookLogin";
-
 
     private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
 
-    private FirebaseAuth mAuth;
-
+    private static final String TAG = "FacebookLogin";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +47,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
             }
 
             @Override
@@ -74,7 +72,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-      //  Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
 
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -83,10 +81,17 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                   //         Log.d(TAG, "signInWithCredential:success");
+                            Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Intent chatIntent = new Intent(IndexActivity.this, ChatroomActivity.class);
+                            updateUI(user);
+                            startActivity(chatIntent);
+                            finish();
                         } else {
                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                           updateUI(null);
+                            //Toast.makeText(IndexActivity.this, "Authentication failed.",
+                            //        Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -99,7 +104,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         LoginManager.getInstance().logOut();
     }
 
-    /*private void updateUI(FirebaseUser user) {
+    private void updateUI(FirebaseUser user) {
         if (user != null) {
 
             findViewById(R.id.login_button).setVisibility(View.GONE);
@@ -107,7 +112,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
             findViewById(R.id.login_button).setVisibility(View.VISIBLE);
         }
-    }*/
+    }
 
     @Override
     public void onClick(View v) {

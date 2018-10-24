@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "622431630223",
-    "firebase_url": "https://class-connect-7504a.firebaseio.com",
-    "project_id": "class-connect-7504a",
-    "storage_bucket": "class-connect-7504a.appspot.com"
+    "project_number": "579316631165",
+    "firebase_url": "https://classconnect-220321.firebaseio.com",
+    "project_id": "classconnect-220321",
+    "storage_bucket": "classconnect-220321.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:622431630223:android:1336f0a30da3ada4",
+        "mobilesdk_app_id": "1:579316631165:android:1336f0a30da3ada4",
         "android_client_info": {
           "package_name": "champagne86.com.classconnect"
         }
       },
       "oauth_client": [
         {
-          "client_id": "622431630223-i2s5kikbsgn6a1mqbi2dsusacj12tsuq.apps.googleusercontent.com",
+          "client_id": "579316631165-dee9uoaohdq1hub7gq1aqns5ms12j57q.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBR5l6kMwj5yJPhc5kDClIPBXTHyOOV9VA"
+          "current_key": "AIzaSyAmxuelCqhIyTQ-zTUNJdwG7w_Nhxn9nl0"
         }
       ],
       "services": {
