@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Class Connect</string>
+    <string name="facebook_app_id">1929592143796036</string>
+    <string name="fb_login_protocol_scheme">fb1929592143796036</string>
 </resources>
