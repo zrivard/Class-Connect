@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
                     public void run(){
-                Intent indexIntent = new Intent(MainActivity.this, IndexActivity.class);
+                Intent indexIntent = new Intent(MainActivity.this, ChatroomActivity.class);
                 startActivity(indexIntent);
                 finish();
             }
