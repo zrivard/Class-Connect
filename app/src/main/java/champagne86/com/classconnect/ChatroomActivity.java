@@ -1,5 +1,6 @@
 package champagne86.com.classconnect;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.LoginButton;
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -19,6 +22,8 @@ import java.util.List;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +37,10 @@ public class ChatroomActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List messageList = new ArrayList();
     private Socket mSocket;
+
+
+    private FirebaseAuth mAuth;
+
 
     private static final String CHAT_URL = "https://classconnect-220321.appspot.com/";
 
@@ -79,6 +88,13 @@ public class ChatroomActivity extends AppCompatActivity {
 
     };
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -90,6 +106,10 @@ public class ChatroomActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+        LoginButton loginButton = findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email", "public_profile");
+        mAuth = FirebaseAuth.getInstance();
         mAdapter = new MessageAdapter(getBaseContext(), messageList);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -105,7 +125,13 @@ public class ChatroomActivity extends AppCompatActivity {
         mSocket.connect();
 
 
+        loginButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View V) {
+                signOut();
+            }
 
+        });
         sendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View V){
@@ -138,6 +164,14 @@ public class ChatroomActivity extends AppCompatActivity {
 
 
         fillWithNonsenseText();
+    }
+
+    public void signOut() {
+        mAuth.signOut();
+        LoginManager.getInstance().logOut();
+        Intent indexIntent = new Intent(ChatroomActivity.this, IndexActivity.class);
+        startActivity(indexIntent);
+        finish();
     }
 
     public void fillWithNonsenseText() {
