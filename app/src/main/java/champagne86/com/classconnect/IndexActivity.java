@@ -1,6 +1,7 @@
 package champagne86.com.classconnect;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            Intent homeIntent = new Intent(IndexActivity.this, HomeActivity.class);
+            startActivity(homeIntent);
+
+        }
     }
 
     @Override
@@ -83,9 +89,9 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent chatIntent = new Intent(IndexActivity.this, ChatroomActivity.class);
+                            Intent homeIntent = new Intent(IndexActivity.this, HomeActivity.class);
                             updateUI(user);
-                            startActivity(chatIntent);
+                            startActivity(homeIntent);
                             finish();
                         } else {
                            Log.w(TAG, "signInWithCredential:failure", task.getException());
