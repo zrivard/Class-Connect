@@ -7,4 +7,15 @@
     <string name="settings">Settings</string>
     <string name="chatrooms">Chatrooms</string>
     <string name="logout">Logout</string>
+    <string name="homeSettings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="chat_archive">Chat Archive</string>
+    <string name="please_enter_a_usename_and_login_with_facebook">Please enter a usename and login with facebook.</string>
+    <string name="username">enter username</string>
+    <string name="anonymous_login">Anonymous login</string>
+    <string name="logoutButton">Log out</string>
+    <string name="sign_string_logoutbutton">Sign @string/logoutButton</string>
+    <string name="sign_in">Sign In</string>
 </resources>
