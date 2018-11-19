@@ -1,13 +1,26 @@
 package champagne86.com.classconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,7 +30,7 @@ import android.view.ViewGroup;
  * Use the {@link icsUpload#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class icsUpload extends Fragment {
+public class icsUpload extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,9 +77,39 @@ public class icsUpload extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Button icsUploadBtn  = (Button) view.findViewById(R.id.icsUploadBtn);
+        icsUploadBtn.setOnClickListener(this);
+
         return inflater.inflate(R.layout.fragment_ics_upload, container, false);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.icsUploadBtn:
+                uploadIcsCal();
+                break;
+        }
+
+    }
+    int uploadIcsCal(){
+        if (!isExternalStorageReadable()) return 0;
+      //  Intent fileIntent = new Intent(Intent.ACTION_PICK, MediaStore.Files.FileColumns.)
+        CalendarBuilder builder = new CalendarBuilder();
+        File calDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File calFile = new File(calDir, "ical.ics");
+
+        return 1;
+    }
+
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

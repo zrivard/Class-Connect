@@ -10,5 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/icsUploadBtn"
+        android:layout_width="63dp"
+        android:layout_height="91dp"
+        android:clickable="true"
+        android:text="Upload Ics File"
+        android:textSize="100sp"
+        android:visibility="visible" />
 
 </FrameLayout>

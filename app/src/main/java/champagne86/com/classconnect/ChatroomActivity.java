@@ -159,7 +159,6 @@ public class ChatroomActivity extends AppCompatActivity {
                 } catch (Exception e) {
 
                 }
-
                 chatMsgInput.setText("");
 
 
