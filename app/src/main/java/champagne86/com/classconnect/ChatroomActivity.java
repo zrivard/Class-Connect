@@ -1,11 +1,8 @@
 package champagne86.com.classconnect;
 
-import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.facebook.login.LoginManager;
-import com.facebook.login.widget.LoginButton;
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -33,19 +37,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static com.facebook.FacebookSdk.getCacheDir;
 
 
 public class ChatroomActivity extends Fragment {
 
     private FragmentActivity chatFrgmt;
     private static final String TAG = ChatroomActivity.class.getName();
-    private static final String CHAT_URL = "https://classconnect-220321.appspot.com/";
+    private static final String BASE_APP_URL = "https://classconnect-220321.appspot.com/";
+    private static final String CHANGE_ROOM_SUFFIX = "change-room?class=";
     private static final String NEW_MSG_EVENT = "chat message";
+    private static final String CHANGE_ROOM_EVENT = "change room";
 
     private int nextMessageID = 1;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List messageList = new ArrayList();
+
+    //HTTP request queue
+    RequestQueue mRequestQueue;
+    Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+    Network network = new BasicNetwork(new HurlStack());
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,18 +84,23 @@ public class ChatroomActivity extends Fragment {
         @Override
         public void call(final Object... args) {
 
-                JSONObject data = (JSONObject) args[0];
-                    String senderName;
-                    String message;
-                    int thisId;
-                    try {
+            //We only want to be waiting for JSON objects
+            if(!args.getClass().equals(JSONObject.class)){
+                return;
+            }
 
-                        senderName = data.getString("sender");
-                        message = data.getString("message");
-                        thisId = data.getInt("id");
-                    } catch (JSONException e) {
-                        return;
-                    }
+            JSONObject data = (JSONObject) args[0];
+            String senderName;
+            String message;
+            int thisId;
+            try {
+
+                senderName = data.getString("sender");
+                message = data.getString("message");
+                thisId = data.getInt("id");
+            } catch (JSONException e) {
+                return;
+            }
 
                     // add the message to view
             messageList.add(new Message(thisId, message, senderName ));
@@ -112,6 +132,10 @@ public class ChatroomActivity extends Fragment {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+        //Setup the queue for any HTTP requests
+        mRequestQueue = new RequestQueue(cache, network);
+        mRequestQueue.start();
+
 
        // setupLoginButton(auth);
 
@@ -119,11 +143,11 @@ public class ChatroomActivity extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        //messageList = HTTP REQUEST FOR JSON STRING
+        //messageList = HTTP REQUEST FOR JSON OBJECT
 
-        //String room = CHAT_URL + "hash";
+        //String room = BASE_APP_URL + "hash";
         try {
-            mSocket = IO.socket(CHAT_URL);
+            mSocket = IO.socket(BASE_APP_URL);
             mSocket.on(NEW_MSG_EVENT, onNewMessage);
             mSocket.connect();
             setupSendMessageButton(mSocket, user);
@@ -182,6 +206,12 @@ public class ChatroomActivity extends Fragment {
 
                 socket.emit(NEW_MSG_EVENT, args);
 
+                //ALEX - This is the caling convention to change chat rooms
+                //Comment out the above emit() call and uncomment the funciton call
+                //to see it in action. (It will print all the messages into the log for you)
+                
+                //changeChatRoom(socket, "CPEN_311");
+
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
@@ -195,6 +225,48 @@ public class ChatroomActivity extends Fragment {
             }
         });
     }
+
+
+    /**
+     * @brief - Changes the current chat room that the user is in.
+     *              This is done by first getting all of the chat
+     *              messages from the database in the new room, and
+     *              then switching the socket room over
+     *
+     * @param socket - The socket we wish to switch over
+     * @param newRoom - The new room that we wish to enter
+     */
+    private void changeChatRoom(final Socket socket, final String newRoom){
+
+        //Create the url that will change the chat rooms
+        String url = BASE_APP_URL + CHANGE_ROOM_SUFFIX + newRoom;
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //ALEX - This is for you
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                        //Now that we have the messages, update our socket
+                        socket.emit(CHANGE_ROOM_EVENT, newRoom);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
 
 //    public void signOut(final FirebaseAuth auth) {
 //        auth.signOut();
