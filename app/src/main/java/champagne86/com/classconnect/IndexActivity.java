@@ -1,12 +1,19 @@
 package champagne86.com.classconnect;
 
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
@@ -15,6 +22,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
+import android.support.v7.app.AlertDialog;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,201 +33,143 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
-public class IndexActivity extends AppCompatActivity implements View.OnClickListener{
-
-
-    private FirebaseAuth mAuth;
-    private CallbackManager mCallbackManager;
-
+public class IndexActivity extends AppCompatActivity {
+    //final String TAG = "indexActivity";
+    private int STORAGE_PERMISSION_CODE = 1;
+    final String FILENAME = "/ical.ics";
     private static final String TAG = "FacebookLogin";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
 
-        mAuth = FirebaseAuth.getInstance();
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
+        Button icsUploadButton = findViewById(R.id.icsUploadBtn);
+        icsUploadButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View V) {
+                /*Context context = getApplicationContext();
+                CharSequence text = "Hello toast!";
+                int duration = Toast.LENGTH_SHORT;
 
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();*/
+                //Log.d(TAG, "BUTTON CLICED\n");
+                readCalendar();
             }
 
-            @Override
-            public void onCancel() {
-            }
 
-            @Override
-            public void onError(FacebookException error) {
-            }
         });
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
 
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent chatIntent = new Intent(IndexActivity.this, ChatroomActivity.class);
-                            updateUI(user);
-                            startActivity(chatIntent);
-                            finish();
-                        } else {
-                           Log.w(TAG, "signInWithCredential:failure", task.getException());
-                           updateUI(null);
-                            //Toast.makeText(IndexActivity.this, "Authentication failed.",
-                            //        Toast.LENGTH_SHORT).show();
-                        }
+    int readCalendar() {
+        Log.d(TAG, "Entered read calendar\n");
+        if (!isExternalStorageReadable()) {
+            Log.d(TAG, "NOT READABLE\n");
+            return 0;
+        }
+        requestPermissions();
+        Log.d(TAG, "SUCCESSFULLY GOT PERMISSIONS\n");
+        StringBuilder sb = new StringBuilder();
+        try {
+            Log.d(TAG, "HIT TRY BLOCK\n");
+            Log.d(TAG, Environment.DIRECTORY_DOWNLOADS);
+            //File icsFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + FILENAME);
+            // Hacky version: needs to be changed
+            File icsFile = new File("/sdcard/Download/ical.ics");
+            ////////////
+            Log.d(TAG, "Created new FILE\n");
 
+            FileInputStream fis = new FileInputStream(icsFile);
+            Log.d(TAG, "PASSED INPUT STREAM\n");
+
+            if (fis != null) {
+
+                InputStreamReader isr = new InputStreamReader(fis);
+                Log.d(TAG, "ISR\n");
+
+                BufferedReader buff = new BufferedReader(isr);
+                Log.d(TAG, "BUFFER READER\n");
+
+                String line = null;
+                Log.d(TAG, "COURSE LIST:\n");
+                while ((line = buff.readLine()) != null) {
+                    if (line.contains("SUMMARY:")) {
+                        Log.d(TAG, line);
                     }
-                });
+                }
+                fis.close();
+            }
+        } catch (IOException e) {
+            Log.d(TAG, "FAILED SOMEWHERE\n");
+        }
+        return 1;
     }
 
-
-    public void signOut() {
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-
-            findViewById(R.id.login_button).setVisibility(View.GONE);
+    void requestPermissions(){
+        if (ContextCompat.checkSelfPermission(IndexActivity.this,
+               android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(IndexActivity.this, "Read oern",
+                    Toast.LENGTH_SHORT).show();
         } else {
+            requestStoragePermission();
+        }
+    }
 
-            findViewById(R.id.login_button).setVisibility(View.VISIBLE);
+    private void requestStoragePermission() {
+        Log.d(TAG, "ENTERING REQUESTING STORAGE PERMISSION\n");
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed because of this and that")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(IndexActivity.this,
+                                    new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
         }
     }
 
     @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        //    if (i == R.id.buttonFacebookSignout) {
-        //        signOut();
-        //     }
-    }
-
-
-        /*
-=======
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == STORAGE_PERMISSION_CODE)  {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            }
         }
-
-//        @Override
-//        public void onStart(); {
-//            super.onStart();
-//            // Check if user is signed in (non-null) and update UI accordingly.
-//            FirebaseUser currentUser = mAuth.getCurrentUser();
-//            updateUI(currentUser);
-//        }
-//
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if (task.isSuccessful()) {
-//                    // Sign in success, update UI with the signed-in user's information
-//                    Log.d(TAG, "createUserWithEmail:success");
-//                    FirebaseUser user = mAuth.getCurrentUser();
-//                    updateUI(user);
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                    Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                            Toast.LENGTH_SHORT).show();
-//                    updateUI(null);
-//                }
-//
-//                // ...
-//            }
-//        });
-//
-//
-//        mAuth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
-
-
-
-
-
     }
-
-
-
-    private void updateUI(FirebaseUser currentUser) {
->>>>>>> origin/Alex*/
-    //}
-
-
 
 }
-
-    ////////////////////////////////////////////////////
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_index);
-        LoginButton loginButton = findViewById(R.id.login_button);
-    };
-}*/
-
-
-
-    ////////////////////
-
-
-

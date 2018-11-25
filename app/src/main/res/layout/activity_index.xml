@@ -7,24 +7,33 @@
     tools:context=".IndexActivity">
 
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+
+    <Button
+        android:id="@+id/icsUploadBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
-
-
-
-    <TextView
-        android:text="Login Screen"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#0000dd"
+        android:clickable="true"
+        android:text="@string/send"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.991"
+        tools:shadowColor="dark @android:color/holo_blue_dark"
+        tools:shadowDx="3dp"
+        tools:text="UPLOAD ICS" />
 
 
 </android.support.constraint.ConstraintLayout>
