@@ -45,7 +45,7 @@ public class ChatroomActivity extends Fragment {
     private FragmentActivity chatFrgmt;
     private static final String TAG = ChatroomActivity.class.getName();
     private static final String BASE_APP_URL = "https://classconnect-220321.appspot.com/";
-    private static final String CHANGE_ROOM_SUFFIX = "change-room?class=";
+    private static final String CHANGE_ROOM_SUFFIX = "change-room?question-id=";
     private static final String NEW_MSG_EVENT = "chat message";
     private static final String CHANGE_ROOM_EVENT = "change room";
 
@@ -160,7 +160,7 @@ public class ChatroomActivity extends Fragment {
         }
 
 
-        fillWithNonsenseText(user);
+        //fillWithNonsenseText(user);
     }
 
     private void createRecyclerView(View v){
@@ -199,14 +199,19 @@ public class ChatroomActivity extends Fragment {
 
                 JSONObject args = new JSONObject();
 
+                boolean anon_login = false; //This can be set somewhere?
+                String display_name = anon_login ? "Anon" : user.getDisplayName();
+
                 try {
                     args.put("id", nextMessageID++);
+                    args.put("display_name", display_name);
                     args.put("message", chatMsgInput.getText().toString());
                     args.put("uuid", user.getUid());
-                    args.put("display_name", "TEMP_DISPLAY_NAME");
 
-                    //This is TEMPORARY
-                    args.put("class_hash", "CPEN_311");
+
+                    //These params will have to be updated
+                    args.put("classroom", "CPEN_311");
+                    args.put("question_id", "SOME_QUESTION");
                 }
                 catch (JSONException e) { }
 
@@ -217,7 +222,7 @@ public class ChatroomActivity extends Fragment {
                 //Comment out the above emit() call and uncomment the funciton call
                 //to see it in action. (It will print all the messages into the log for you)
 
-                //changeChatRoom(socket, "CPEN_311");
+                //changeChatRoom(socket, "SOME_QUESTION");
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
