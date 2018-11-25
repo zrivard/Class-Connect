@@ -4,21 +4,27 @@ public class Message {
 
     protected int id;
     protected String message;
-    protected String senderName;
+    protected String senderID;
+    protected  String senderDisplayName;
 
-    public Message(int id, String message, String senderName) {
+    public Message(int id, String message, String senderID, String senderDisplayName) {
         this.id = id;
         this.message = message;
-        this.senderName = senderName;
+        this.senderID = senderID;
+        this.senderDisplayName = senderDisplayName;
     }
 
-    public String getSenderName() {
-        return senderName;
+    public String getSenderID() {
+        return senderID;
     }
 
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
+    public void setSenderID(String senderName) {
+        this.senderID = senderName;
     }
+
+    public String getSenderDisplayName() { return senderDisplayName; }
+
+    public void setSenderDisplayName(String senderDisplayName) { this.senderDisplayName = senderDisplayName; }
 
     public String getMessage() {
 

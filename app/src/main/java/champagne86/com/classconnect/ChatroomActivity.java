@@ -84,18 +84,21 @@ public class ChatroomActivity extends Fragment {
         @Override
         public void call(final Object... args) {
 
-            //We only want to be waiting for JSON objects
-            if(!args.getClass().equals(JSONObject.class)){
-                return;
-            }
-
-            JSONObject data = (JSONObject) args[0];
-            String senderName;
+            JSONObject data;
+            String senderId;
             String message;
+            String senderDisplayName;
             int thisId;
-            try {
 
-                senderName = data.getString("sender");
+            try {
+                if(args[0].getClass().equals(JSONObject.class)){
+                    data = (JSONObject) args[0];
+                } else{
+                    data = new JSONObject((String)args[0]);
+                }
+
+                senderDisplayName = data.getString("display_name");
+                senderId = data.getString("uuid");
                 message = data.getString("message");
                 thisId = data.getInt("id");
             } catch (JSONException e) {
@@ -103,7 +106,7 @@ public class ChatroomActivity extends Fragment {
             }
 
                     // add the message to view
-            messageList.add(new Message(thisId, message, senderName ));
+            messageList.add(new Message(thisId, message, senderId, senderDisplayName));
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -199,7 +202,11 @@ public class ChatroomActivity extends Fragment {
                 try {
                     args.put("id", nextMessageID++);
                     args.put("message", chatMsgInput.getText().toString());
-                    args.put("sender", user.getUid());
+                    args.put("uuid", user.getUid());
+                    args.put("display_name", "TEMP_DISPLAY_NAME");
+
+                    //This is TEMPORARY
+                    args.put("class_hash", "CPEN_311");
                 }
                 catch (JSONException e) { }
 
@@ -209,7 +216,7 @@ public class ChatroomActivity extends Fragment {
                 //ALEX - This is the caling convention to change chat rooms
                 //Comment out the above emit() call and uncomment the funciton call
                 //to see it in action. (It will print all the messages into the log for you)
-                
+
                 //changeChatRoom(socket, "CPEN_311");
 
                 try  {
@@ -278,7 +285,7 @@ public class ChatroomActivity extends Fragment {
 //    }
 
     public void fillWithNonsenseText(FirebaseUser user) {
-        messageList.add(new Message(nextMessageID++, "I AM THE USER", user.getUid()));
-        messageList.add(new Message(nextMessageID++, "I AM ANOTHER STUDENT", "Example Student"));
+        messageList.add(new Message(nextMessageID++, "I AM THE USER", user.getUid(), "User's Name"));
+        messageList.add(new Message(nextMessageID++, "I AM ANOTHER STUDENT", "sdvbzdkjvzsljfvbFAKED", "Other Name"));
     }
 }
