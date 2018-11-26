@@ -217,7 +217,7 @@ public class ChatroomActivity extends Fragment {
                 catch (JSONException e) { }
 
 
-                //socket.emit(NEW_MSG_EVENT, args);
+                socket.emit(NEW_MSG_EVENT, args);
 
                 //ALEX - This is the caling convention to change chat rooms
                 //Comment out the above emit() call and uncomment the function call
@@ -225,7 +225,7 @@ public class ChatroomActivity extends Fragment {
 
                 //changeChatRoom(socket, "SOME_QUESTION");
                 //askQuestion("Cool question", "CPEN_311", user);
-                getClassMessages("CPEN_311");
+                //getClassMessages("CPEN_311");
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
