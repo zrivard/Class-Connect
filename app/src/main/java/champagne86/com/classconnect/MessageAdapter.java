@@ -74,7 +74,14 @@ public class MessageAdapter extends RecyclerView.Adapter {
                 return;
             }
         });
-        msg.usrIdTextView.setText(messageList.get(position).getSenderName());
+
+        msg.usrIdTextView.setText(messageList.get(position).getSenderDisplayName());
+//        msg.usrIdTextView.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                remove(position);
+//            }
+//        });
 
     }
 
@@ -89,7 +96,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
 
         //CHANGE USER TO USER ID WHEN NECESSARY
-        if (message.getSenderName().equals(mUser.getUid())) {
+        if (message.getSenderID().equals(mUser.getUid())) {
             return SENDER;
         } else {
             return RECEIVER;
