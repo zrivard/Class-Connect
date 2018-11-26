@@ -122,10 +122,10 @@ public class HomeActivity extends AppCompatActivity {
                 fragmentClass = HomeFragment.class;
                 break;
             case R.id.nav_logout:
-                fragmentClass = HomeFragment.class;
-//                FirebaseAuth auth;
-//                auth = FirebaseAuth.getInstance();
-//                signOut(auth);
+               // fragmentClass = HomeFragment.class;
+                FirebaseAuth auth;
+                auth = FirebaseAuth.getInstance();
+                signOut(auth);
             case R.id.nav_settings:
                 fragmentClass = SettingsFragment.class;
                 break;
@@ -154,7 +154,6 @@ public class HomeActivity extends AppCompatActivity {
 
     public void signOut(final FirebaseAuth auth) {
         auth.signOut();
-
         LoginManager.getInstance().logOut();
         Intent indexIntent = new Intent(HomeActivity.this, IndexActivity.class);
         startActivity(indexIntent);
