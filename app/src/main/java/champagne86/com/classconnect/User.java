@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class  User {
     public FirebaseUser mUser;
     public String uid;
     public String userName;

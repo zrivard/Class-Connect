@@ -126,6 +126,8 @@ public class HomeActivity extends AppCompatActivity {
 //                FirebaseAuth auth;
 //                auth = FirebaseAuth.getInstance();
 //                signOut(auth);
+            case R.id.nav_settings:
+                fragmentClass = SettingsFragment.class;
                 break;
             default:
                 fragmentClass = HomeFragment.class;
