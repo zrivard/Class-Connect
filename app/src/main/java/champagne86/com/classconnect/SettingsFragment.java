@@ -73,7 +73,6 @@ public class SettingsFragment extends Fragment {
 
     private void setupSendMessageButton(){
 
-        //LinearLayout msgLayout = (LinearLayout) getView().findViewById(R.id.chatInputLayout);
         Button uploadButton = (Button) getView().findViewById(R.id.uploadIcsBtn);
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
@@ -96,10 +95,11 @@ public class SettingsFragment extends Fragment {
         try {
             Log.d(TAG, "HIT TRY BLOCK\n");
             Log.d(TAG, Environment.DIRECTORY_DOWNLOADS);
-            //File icsFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + FILENAME);
-            // Hacky version: needs to be changed
+            /** Slightly hacky with hardcoding path, might need to be changed but I think all android devices
+             * have an android folder and when I tried to use the constant above it wasn't working
+             * */
+
             File icsFile = new File("/sdcard/Download/ical.ics");
-            ////////////
             Log.d(TAG, "Created new FILE\n");
 
             FileInputStream fis = new FileInputStream(icsFile);
@@ -108,11 +108,10 @@ public class SettingsFragment extends Fragment {
             if (fis != null) {
                 TextView textView = (TextView) getView().findViewById(R.id.courseList);
                 textView.setText("");
+                //Should deregister users from classes here since they'll be uploading a new timetable
                 InputStreamReader isr = new InputStreamReader(fis);
-                Log.d(TAG, "ISR\n");
 
                 BufferedReader buff = new BufferedReader(isr);
-                Log.d(TAG, "BUFFER READER\n");
 
                 String line = null;
                 FirebaseAuth auth;
@@ -120,15 +119,21 @@ public class SettingsFragment extends Fragment {
                 auth = FirebaseAuth.getInstance();
                 user = auth.getCurrentUser();
                 User currUser = new User(user, user.getDisplayName());
-                Log.d(TAG, "COURSE LIST:\n");
                 while ((line = buff.readLine()) != null) {
                     if (line.contains("SUMMARY:")) {
                         Log.d(TAG, line);
                         String[] parts = line.split(": ");
                         String className = line.substring(line.indexOf(":")+1);
-                        Classroom currClass = new Classroom(className);
-                        currUser.addClass(currClass);
-                        textView.append(className + "\n");
+                        if(!textView.getText().toString().contains(className) && true
+                            /*'true' Could be replaced with being an approved course(CPEN 311 etc.)
+                            * Duplicates would be better prevented by checking the list of classrooms,
+                            * right now if they hit upload button twice we'll sign up for courses a second time
+                            * */)
+                        {
+                            Classroom currClass = new Classroom(className);
+                            currUser.addClass(currClass);
+                            textView.append(className + "\n");
+                        }
                     }
                 }
 
@@ -156,8 +161,6 @@ public class SettingsFragment extends Fragment {
     void requestPermissions(){
         if (ContextCompat.checkSelfPermission(settFrgmt,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(settFrgmt, "Read oern",
-                    Toast.LENGTH_SHORT).show();
         } else {
             requestStoragePermission();
         }
@@ -165,40 +168,18 @@ public class SettingsFragment extends Fragment {
 
     private void requestStoragePermission() {
         Log.d(TAG, "ENTERING REQUESTING STORAGE PERMISSION\n");
-        if (ActivityCompat.shouldShowRequestPermissionRationale(settFrgmt,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-            new AlertDialog.Builder(settFrgmt)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(settFrgmt,
-                                    new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-
-        } else {
             ActivityCompat.requestPermissions(settFrgmt,
                     new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == STORAGE_PERMISSION_CODE)  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(settFrgmt, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(settFrgmt, "Got permission", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(settFrgmt, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(settFrgmt, "Permission request denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
