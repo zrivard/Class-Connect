@@ -46,6 +46,7 @@ public class ChatroomActivity extends Fragment {
     private static final String TAG = ChatroomActivity.class.getName();
     private static final String BASE_APP_URL = "https://classconnect-220321.appspot.com/";
     private static final String CHANGE_ROOM_SUFFIX = "change-room?question-id=";
+    private static final String ASK_QUESTION_SUFFIX = "ask-question/";
     private static final String NEW_MSG_EVENT = "chat message";
     private static final String CHANGE_ROOM_EVENT = "change room";
 
@@ -159,8 +160,6 @@ public class ChatroomActivity extends Fragment {
             Log.e(TAG, "\tError: " +  e.getMessage());
         }
 
-
-        //fillWithNonsenseText(user);
     }
 
     private void createRecyclerView(View v){
@@ -216,13 +215,14 @@ public class ChatroomActivity extends Fragment {
                 catch (JSONException e) { }
 
 
-                socket.emit(NEW_MSG_EVENT, args);
+                //socket.emit(NEW_MSG_EVENT, args);
 
                 //ALEX - This is the caling convention to change chat rooms
                 //Comment out the above emit() call and uncomment the funciton call
                 //to see it in action. (It will print all the messages into the log for you)
 
                 //changeChatRoom(socket, "SOME_QUESTION");
+                askQuestion("Cool question", "CPEN_311", user);
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -279,6 +279,48 @@ public class ChatroomActivity extends Fragment {
         mRequestQueue.add(jsonObjectRequest);
     }
 
+    /**
+     * @brief - Sends a question to the database
+     */
+    private void askQuestion(String questionText, String classroom, FirebaseUser user){
+
+        //Create the url that will ask the question
+        String url = BASE_APP_URL + ASK_QUESTION_SUFFIX;
+        // POST parameters
+        JSONObject params = new JSONObject();
+        try{
+            params.put("user_id", user.getUid());
+            params.put("question", questionText);
+            params.put("classroom", classroom);
+        }catch(JSONException e){
+            Log.e(TAG, e.getMessage());
+        }
+
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //ALEX - This is for you
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
 
 //    public void signOut(final FirebaseAuth auth) {
 //        auth.signOut();
@@ -289,8 +331,4 @@ public class ChatroomActivity extends Fragment {
 //        finish();
 //    }
 
-    public void fillWithNonsenseText(FirebaseUser user) {
-        messageList.add(new Message(nextMessageID++, "I AM THE USER", user.getUid(), "User's Name"));
-        messageList.add(new Message(nextMessageID++, "I AM ANOTHER STUDENT", "sdvbzdkjvzsljfvbFAKED", "Other Name"));
-    }
 }
