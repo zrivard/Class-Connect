@@ -1,7 +1,10 @@
 package champagne86.com.classconnect;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.facebook.login.LoginManager;
@@ -123,9 +127,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.nav_logout:
                // fragmentClass = HomeFragment.class;
-                FirebaseAuth auth;
-                auth = FirebaseAuth.getInstance();
-                signOut(auth);
+                signOutConfirm();
             case R.id.nav_settings:
                 fragmentClass = SettingsFragment.class;
                 break;
@@ -158,5 +160,29 @@ public class HomeActivity extends AppCompatActivity {
         Intent indexIntent = new Intent(HomeActivity.this, IndexActivity.class);
         startActivity(indexIntent);
         finish();
+    }
+
+    private void signOutConfirm() {
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirmation")
+                    .setMessage("Are you sure you want to sign out?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseAuth auth;
+                            auth = FirebaseAuth.getInstance();
+                            signOut(auth);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+
     }
 }
