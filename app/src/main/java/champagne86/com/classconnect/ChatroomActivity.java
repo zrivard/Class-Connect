@@ -47,6 +47,8 @@ public class ChatroomActivity extends Fragment {
     private static final String BASE_APP_URL = "https://classconnect-220321.appspot.com/";
     private static final String CHANGE_ROOM_SUFFIX = "change-room?question-id=";
     private static final String ASK_QUESTION_SUFFIX = "ask-question/";
+    private static final String GET_QUESTIONS_SUFFIX = "get-questions?class=";
+
     private static final String NEW_MSG_EVENT = "chat message";
     private static final String CHANGE_ROOM_EVENT = "change room";
 
@@ -218,11 +220,12 @@ public class ChatroomActivity extends Fragment {
                 //socket.emit(NEW_MSG_EVENT, args);
 
                 //ALEX - This is the caling convention to change chat rooms
-                //Comment out the above emit() call and uncomment the funciton call
+                //Comment out the above emit() call and uncomment the function call
                 //to see it in action. (It will print all the messages into the log for you)
 
                 //changeChatRoom(socket, "SOME_QUESTION");
-                askQuestion("Cool question", "CPEN_311", user);
+                //askQuestion("Cool question", "CPEN_311", user);
+                getClassMessages("CPEN_311");
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -309,6 +312,38 @@ public class ChatroomActivity extends Fragment {
                             Log.e(TAG, e.getMessage());
                         }
 
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
+    /**
+     * @brief - Retrieves all messages belonging to a classroom
+     * @param classRoom - String name of the class
+     */
+    private void getClassMessages(String classRoom){
+
+        //Create the url that will change the chat rooms
+        String url = BASE_APP_URL + GET_QUESTIONS_SUFFIX + classRoom;
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //ALEX - This is for you
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
