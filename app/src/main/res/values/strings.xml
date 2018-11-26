@@ -19,4 +19,15 @@
     <string name="sign_string_logoutbutton">Sign @string/logoutButton</string>
     <string name="sign_in">Sign In</string>
     <string name="please_login_with_facebook_before_proceeding">Please login with Facebook \n before proceeding</string>
+
+    <!-- URLs and their modifiers -->
+    <string name="app_url">https://classconnect-220321.appspot.com/</string>
+    <string name="change_room_suffix">change-room?question-id=</string>
+    <string name="ask_question_suffix">ask-question/</string>
+    <string name="get_questions_suffix">get-questions?class=</string>
+    <string name="get_class_info_suffix">get-class-info?class=</string>
+
+    <!--Socket message event types -->
+    <string name="new_msg_event">chat message</string>
+    <string name="change_room_event">change room</string>
 </resources>
