@@ -75,12 +75,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
             }
         });
         msg.usrIdTextView.setText(messageList.get(position).getSenderName());
-        msg.usrIdTextView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                remove(position);
-            }
-        });
+
     }
 
     @Override

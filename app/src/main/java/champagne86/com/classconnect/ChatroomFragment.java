@@ -1,11 +1,8 @@
 package champagne86.com.classconnect;
 
-import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.facebook.login.LoginManager;
-import com.facebook.login.widget.LoginButton;
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,10 +29,10 @@ import org.json.JSONObject;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
-public class ChatroomActivity extends Fragment {
+public class ChatroomFragment extends Fragment {
 
     private FragmentActivity chatFrgmt;
-    private static final String TAG = ChatroomActivity.class.getName();
+    private static final String TAG = ChatroomFragment.class.getName();
     private static final String CHAT_URL = "https://classconnect-220321.appspot.com/";
     private static final String NEW_MSG_EVENT = "chat message";
 
@@ -200,7 +194,7 @@ public class ChatroomActivity extends Fragment {
 //        auth.signOut();
 //
 //        LoginManager.getInstance().logOut();
-//        Intent indexIntent = new Intent(ChatroomActivity.this, IndexActivity.class);
+//        Intent indexIntent = new Intent(ChatroomFragment.this, IndexActivity.class);
 //        startActivity(indexIntent);
 //        finish();
 //    }

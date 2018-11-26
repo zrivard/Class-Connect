@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".IndexActivity" />
-        <activity android:name=".ChatroomActivity" />
+        <activity android:name=".ChatroomFragment" />
         <activity android:name=".HomeActivity"></activity>
     </application>
 

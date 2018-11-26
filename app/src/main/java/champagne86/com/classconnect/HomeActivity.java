@@ -10,13 +10,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -119,7 +116,7 @@ public class HomeActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(menuItem.getItemId()) {
             case R.id.nav_chatrooms:
-                fragmentClass = ChatroomActivity.class;
+                fragmentClass = ChatroomFragment.class;
                 break;
             case R.id.nav_home:
                 fragmentClass = HomeFragment.class;

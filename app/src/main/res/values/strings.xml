@@ -18,4 +18,5 @@
     <string name="logoutButton">Log out</string>
     <string name="sign_string_logoutbutton">Sign @string/logoutButton</string>
     <string name="sign_in">Sign In</string>
+    <string name="please_login_with_facebook_before_proceeding">Please login with Facebook \n before proceeding</string>
 </resources>

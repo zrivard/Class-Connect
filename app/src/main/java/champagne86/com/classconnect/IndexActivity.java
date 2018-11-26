@@ -1,7 +1,6 @@
 package champagne86.com.classconnect;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,9 +15,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.net.Uri;
+
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -28,20 +25,34 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.ref.Reference;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IndexActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private FirebaseAuth mAuth;
+    private FirebaseApp mApp;
+    private FirebaseFirestore mDb;
     private CallbackManager mCallbackManager;
     final Context context = this;
+
+    private String uid;
+    private User user;
 
     private static final String TAG = "FacebookLogin";
 
@@ -62,8 +73,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-
-        mAuth = FirebaseAuth.getInstance();
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
@@ -71,7 +80,6 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
-
             }
 
             @Override
@@ -83,18 +91,71 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getUid();
+        mDb = mDb.getInstance();
+
+
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Switch anonymousUser = findViewById(R.id.anonymousUsr);
+                final Switch anonymousUser = findViewById(R.id.anonymousUsr);
                 TextInputEditText usernameInput = findViewById(R.id.usernameInput);
-                String username;
-                checkUsrName();
+                final FirebaseUser currentUser = mAuth.getCurrentUser();
+                final String username;
 
                 username = usernameInput.getText().toString();
+                if (!anonymousUser.isChecked()) {
+                    checkUsrName();
+                }
 
-                if (usernameValid(username) || anonymousUser.isChecked()) {
+
+                if (currentUser == null) {
+                    checkFb(currentUser);
+                }
+
+
+
+               final Map<String, Object> data1 = new HashMap<>();
+                if (anonymousUser.isChecked()) {
+                    data1.put("name", "Anonymous");
+                }
+                else {
+                    data1.put("name", username);
+                }
+                data1.put("classes", Arrays.asList("NO CLASSES"));
+
+
+                DocumentReference docRef = mDb.collection("users").document(uid);
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                Map<String, Object> data = document.getData();
+                                if (anonymousUser.isChecked()){
+                                    data.put("name", "Anonymous");
+                                }
+                                else {
+                                    data.put("name", username);
+                                }
+                            } else {
+                                Log.d(TAG, "No such document");
+                                CollectionReference users = mDb.collection("users");
+                                users.document(uid).set(data1);
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+
+
+                if (currentUser != null && (usernameValid(username) || anonymousUser.isChecked())) {
                     Intent homeIntent = new Intent(IndexActivity.this, HomeActivity.class);
                     startActivity(homeIntent);
                 }
@@ -107,12 +168,15 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Intent homeIntent = new Intent(IndexActivity.this, HomeActivity.class);
-            startActivity(homeIntent);
-
-        }
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//        if (currentUser != null)                 public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
+//
+//
+//        }
     }
 
     @Override
@@ -131,24 +195,24 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-        @Override
-        public void onComplete (@NonNull Task < AuthResult > task) {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "signInWithCredential:success");
-                FirebaseUser user = mAuth.getCurrentUser();
-                FirebaseAuth auth;
-                auth = FirebaseAuth.getInstance();
-                updateUI(user);
-                finish();
-            } else {
-                Log.w(TAG, "signInWithCredential:failure", task.getException());
-                updateUI(null);
-                //Toast.makeText(IndexActivity.this, "Authentication failed.",
-                //        Toast.LENGTH_SHORT).show();
-            }
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseAuth auth;
+                            auth = FirebaseAuth.getInstance();
+                            updateUI(user);
+                            finish();
+                        } else {
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            updateUI(null);
+                            //Toast.makeText(IndexActivity.this, "Authentication failed.",
+                            //        Toast.LENGTH_SHORT).show();
+                        }
 
-        }
-        });
+                    }
+                });
     }
 
 
@@ -186,12 +250,12 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
         if (username.length() == 0) {
             LayoutInflater li = LayoutInflater.from(context);
-            View promptsView = li.inflate(R.layout.prompts, null);
+            View promptsView = li.inflate(R.layout.usrname_prompt, null);
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     context);
 
-            // set prompts.xml to alertdialog builder
+            // set usrNamePromptPrompt.xml to alertdialog builder
             alertDialogBuilder.setView(promptsView);
 
             final EditText userPromptInput = (EditText) promptsView
@@ -223,6 +287,35 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void checkFb(FirebaseUser user) {
+
+
+        if (user == null) {
+            LayoutInflater li = LayoutInflater.from(context);
+            View promptsView = li.inflate(R.layout.fblogin_prompt, null);
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    context);
+
+            // set usrNamePromptPrompt.xml to alertdialog builder
+            alertDialogBuilder.setView(promptsView);
+
+            // set dialog message
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+        }
+    }
 
 
     @Override
@@ -234,105 +327,5 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
         //        signOut();
         //     }
     }
-    }
-
-        /*
-=======
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            String uid = user.getUid();
-        }
-
-//        @Override
-//        public void onStart(); {
-//            super.onStart();
-//            // Check if user is signed in (non-null) and update UI accordingly.
-//            FirebaseUser currentUser = mAuth.getCurrentUser();
-//            updateUI(currentUser);
-//        }
-//
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if (task.isSuccessful()) {
-//                    // Sign in success, update UI with the signed-in user's information
-//                    Log.d(TAG, "createUserWithEmail:success");
-//                    FirebaseUser user = mAuth.getCurrentUser();
-//                    updateUI(user);
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                    Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                            Toast.LENGTH_SHORT).show();
-//                    updateUI(null);
-//                }
-//
-//                // ...
-//            }
-//        });
-//
-//
-//        mAuth.signInWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
-
-
-
-
-
-    }
-
-
-
-    private void updateUI(FirebaseUser currentUser) {
->>>>>>> origin/Alex*/
-    //}
-
-
-
-
-
-    ////////////////////////////////////////////////////
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_index);
-        LoginButton loginButton = findViewById(R.id.login_button);
-    };
-}*/
-
-
-
-    ////////////////////
-
-
+}
 
