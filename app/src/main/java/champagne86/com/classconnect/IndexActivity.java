@@ -39,8 +39,10 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-
         mAuth = FirebaseAuth.getInstance();
+        if(alreadyLoggedIn()){
+            enterHomeActivity();
+        }
         mCallbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
@@ -59,6 +61,11 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
             public void onError(FacebookException error) {
             }
         });
+    }
+
+    public boolean alreadyLoggedIn() {
+        AccessToken fbAccess = AccessToken.getCurrentAccessToken();
+        return (fbAccess != null);
     }
 
     @Override
@@ -84,11 +91,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent chatIntent = new Intent(IndexActivity.this, HomeActivity.class);
-                            updateUI(user);
-                            startActivity(chatIntent);
-                            finish();
+                            enterHomeActivity();
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             updateUI(null);
@@ -98,6 +101,14 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
                     }
                 });
+    }
+
+    public void enterHomeActivity(){
+        FirebaseUser user = mAuth.getCurrentUser();
+        Intent chatIntent = new Intent(IndexActivity.this, HomeActivity.class);
+        updateUI(user);
+        startActivity(chatIntent);
+        finish();
     }
 
 

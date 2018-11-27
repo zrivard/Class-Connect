@@ -217,11 +217,6 @@ public class ChatroomFragment extends Fragment {
                 //mApiCaller.getClassroomInfo("CPEN_311");
                 //mApiCaller.getUserClasses(user.getUid());
 
-                HashMap<String, Boolean> enrolledClasses = new HashMap<>();
-                enrolledClasses.put("CPEN_311", false);
-                enrolledClasses.put("CPEN_321", false);
-                enrolledClasses.put("CPEN_331", true);
-                mApiCaller.setUserClasses(user.getUid(), enrolledClasses);
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
