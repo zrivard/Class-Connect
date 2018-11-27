@@ -27,6 +27,7 @@
     <string name="get_questions_suffix">get-questions?class=</string>
     <string name="get_class_info_suffix">get-class-info?class=</string>
     <string name="get_user_classes_suffix">get-user-classes?user=</string>
+    <string name="set_user_classes_suffix">set-classes/</string>
 
     <!--Socket message event types -->
     <string name="new_msg_event">chat message</string>

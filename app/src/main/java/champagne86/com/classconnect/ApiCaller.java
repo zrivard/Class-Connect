@@ -15,9 +15,16 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import io.grpc.Metadata;
 
 import static com.facebook.FacebookSdk.getCacheDir;
 
@@ -272,6 +279,60 @@ public class ApiCaller {
                         //`response` is a JSONObject containing the following
                         //-Name
                         //-enrolledClasses
+
+                        //Call some UI updating function here based on `response`?
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
+    public void setUserClasses(String userID, HashMap<String, Boolean> classes){
+        //Create the url that will get all the info
+        String url =  mContext.getString(R.string.app_url)
+                + mContext.getString(R.string.set_user_classes_suffix);
+
+
+        // POST parameters for the request
+        JSONObject params = new JSONObject();
+        JSONObject enrolledClasses = new JSONObject();
+        try{
+
+            for(String key: classes.keySet()){
+                enrolledClasses.put(key, classes.get(key));
+            }
+
+            params.put("user_id", userID);
+            params.put("enrolledClasses", enrolledClasses);
+            Log.d(TAG, params.toString(4));
+        }catch(JSONException e){
+            Log.e(TAG, e.getMessage());
+        }
+
+
+
+
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                        //ALEX - This is for you
+                        //`response` is a JSONObject containing the same
+                        //data that you sent as params
 
                         //Call some UI updating function here based on `response`?
                     }

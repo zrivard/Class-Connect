@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -214,7 +215,13 @@ public class ChatroomFragment extends Fragment {
                 //mApiCaller.askQuestion("Question asked now", "CPEN_311", user);
                 //mApiCaller.getClassQuestions("CPEN_311");
                 //mApiCaller.getClassroomInfo("CPEN_311");
-                mApiCaller.getUserClasses(user.getUid());
+                //mApiCaller.getUserClasses(user.getUid());
+
+                HashMap<String, Boolean> enrolledClasses = new HashMap<>();
+                enrolledClasses.put("CPEN_311", false);
+                enrolledClasses.put("CPEN_321", false);
+                enrolledClasses.put("CPEN_331", true);
+                mApiCaller.setUserClasses(user.getUid(), enrolledClasses);
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
