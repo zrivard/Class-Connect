@@ -213,7 +213,8 @@ public class ChatroomFragment extends Fragment {
                 //mApiCaller.changeChatRoom(socket, "SOME_QUESTION");
                 //mApiCaller.askQuestion("Question asked now", "CPEN_311", user);
                 //mApiCaller.getClassQuestions("CPEN_311");
-                mApiCaller.getClassroomInfo("CPEN_311");
+                //mApiCaller.getClassroomInfo("CPEN_311");
+                mApiCaller.getUserClasses(user.getUid());
 
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);

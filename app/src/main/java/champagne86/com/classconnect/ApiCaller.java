@@ -249,4 +249,40 @@ public class ApiCaller {
         //Add to the queue of requests to be sent
         mRequestQueue.add(jsonObjectRequest);
     }
+
+    public void getUserClasses(String userID){
+        //Create the url that will get all the info
+        String url =  mContext.getString(R.string.app_url)
+                + mContext.getString(R.string.get_user_classes_suffix)
+                + userID;
+
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                        //ALEX - This is for you
+                        //`response` is a JSONObject containing the following
+                        //-Name
+                        //-enrolledClasses
+
+                        //Call some UI updating function here based on `response`?
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
 }

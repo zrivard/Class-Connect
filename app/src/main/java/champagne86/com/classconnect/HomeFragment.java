@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,12 +125,14 @@ public class HomeFragment extends Fragment {
 
 
                         Map<String, Object> userDoc = document.getData();
-                        ArrayList<String> strClassList = (ArrayList<String>) userDoc.get("classes");
-                        for (String next : strClassList) {
+                        HashMap<String, Boolean> strClassMap = (HashMap<String, Boolean>) userDoc.get("enrolledClasses");
+                        for (String key : strClassMap.keySet()) {
 
-                            Classroom newclass = new Classroom(next);
-                            classList.add(newclass);
-                            updateClassList();
+                            if(strClassMap.get(key)) {
+                                Classroom newclass = new Classroom(key);
+                                classList.add(newclass);
+                                updateClassList();
+                            }
 
                             Log.i(TAG, "___________________REACHED________________");
                             Log.i(TAG, "LIST: " + classList);
