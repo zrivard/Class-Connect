@@ -91,6 +91,7 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
+
                             enterHomeActivity();
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -106,8 +107,10 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
     public void enterHomeActivity(){
         FirebaseUser user = mAuth.getCurrentUser();
         Intent chatIntent = new Intent(IndexActivity.this, HomeActivity.class);
+
+        ApiCaller apiCall = new ApiCaller(getApplicationContext());
         updateUI(user);
-        startActivity(chatIntent);
+        apiCall.addUserToDB(user.getUid(),user.getDisplayName(), chatIntent);
         finish();
     }
 

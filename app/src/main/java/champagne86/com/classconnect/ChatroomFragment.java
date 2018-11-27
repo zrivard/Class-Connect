@@ -216,6 +216,13 @@ public class ChatroomFragment extends Fragment {
                 //mApiCaller.getClassQuestions("CPEN_311");
                 //mApiCaller.getClassroomInfo("CPEN_311");
                 //mApiCaller.getUserClasses(user.getUid());
+                /*HashMap<String, Boolean> enrolledClasses = new HashMap<>();
+                enrolledClasses.put("CPEN_311", false);
+                enrolledClasses.put("CPEN_321", false);
+                enrolledClasses.put("CPEN_331", true);
+                mApiCaller.setUserClasses(user.getUid(), enrolledClasses);*/
+                //mApiCaller.closeQuestion("dE1DrP33GtTw4k98BuaP");
+
 
 
                 try  {
