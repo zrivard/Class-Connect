@@ -106,12 +106,13 @@ public class IndexActivity extends AppCompatActivity implements View.OnClickList
 
     public void enterHomeActivity(){
         FirebaseUser user = mAuth.getCurrentUser();
-        Intent chatIntent = new Intent(IndexActivity.this, HomeActivity.class);
 
-        ApiCaller apiCall = new ApiCaller(getApplicationContext());
+
+        ApiCaller apiCall = new ApiCaller(this.getApplicationContext());
         updateUI(user);
+        Intent chatIntent = new Intent(this, HomeActivity.class);
+        chatIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         apiCall.addUserToDB(user.getUid(),user.getDisplayName(), chatIntent);
-        finish();
     }
 
 

@@ -30,7 +30,7 @@ import io.grpc.Metadata;
 
 import static com.facebook.FacebookSdk.getCacheDir;
 
-public class ApiCaller extends Activity {
+public class ApiCaller {
 
     private static final String TAG = ApiCaller.class.getName();
 
@@ -61,7 +61,7 @@ public class ApiCaller extends Activity {
     public ApiCaller(Context context){
 
         if(mRequestQueue == null) {
-            cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+            cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024);
             //Setup the queue for any HTTP requests
             mRequestQueue = new RequestQueue(cache, network);
             mRequestQueue.start();
@@ -79,7 +79,7 @@ public class ApiCaller extends Activity {
      *
      * @param uuid The current users uuid
      */
-    public void addUserToDB(String uuid, String name, final Intent newIntent){
+    public void addUserToDB(String uuid, String name, final Intent chatIntent){
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
                 + mContext.getString(R.string.add_user_uuid_suffix)
@@ -100,7 +100,7 @@ public class ApiCaller extends Activity {
 
                         //ALEX - This is for you
                         //Will return the user object
-                        startActivity(newIntent);
+                        mContext.startActivity(chatIntent);
                         //Call some UI updating function here based on `response`?
 
 
