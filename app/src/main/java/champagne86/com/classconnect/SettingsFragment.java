@@ -36,6 +36,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -45,7 +47,7 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class SettingsFragment extends Fragment {
     private FragmentActivity settFrgmt;
-
+    private ApiCaller mApi;
     private int STORAGE_PERMISSION_CODE = 1;
     final String FILENAME = "/ical.ics";
     private static final String TAG = "SettingsFrag";
@@ -112,6 +114,7 @@ public class SettingsFragment extends Fragment {
                 InputStreamReader isr = new InputStreamReader(fis);
 
                 BufferedReader buff = new BufferedReader(isr);
+                HashMap<String, Boolean> enrolledClasses = new HashMap<>();
 
                 String line = null;
                 FirebaseAuth auth;
@@ -122,31 +125,33 @@ public class SettingsFragment extends Fragment {
                 while ((line = buff.readLine()) != null) {
                     if (line.contains("SUMMARY:")) {
                         Log.d(TAG, line);
-                        String[] parts = line.split(": ");
-                        String className = line.substring(line.indexOf(":")+1);
-                        if(!textView.getText().toString().contains(className) && true
-                            /*'true' Could be replaced with being an approved course(CPEN 311 etc.)
-                            * Duplicates would be better prevented by checking the list of classrooms,
-                            * right now if they hit upload button twice we'll sign up for courses a second time
-                            * */)
-                        {
-                            Classroom currClass = new Classroom(className);
-                            currUser.addClass(currClass);
-                            textView.append(className + "\n");
-                        }
+                        String parsed = parseClass(line);
+                        Log.d(TAG, parsed);
+                        enrolledClasses.put(parsed, true);
                     }
                 }
-
+                mApi = new ApiCaller(this.getContext());
+                mApi.setUserClasses(user.getUid() ,enrolledClasses);
                 fis.close();
             }
             else{
                 Toast.makeText(settFrgmt, "Could not find calendar file. Download from ubc ssc", Toast.LENGTH_LONG).show();
-
+                fis.close();
             }
         } catch (IOException e) {
             Log.d(TAG, "FAILED SOMEWHERE\n");
         }
         return 1;
+    }
+
+    public String parseClass(String oldClass){
+        String noSummary = oldClass.substring(oldClass.indexOf(":")+1);
+        Log.d(TAG, "NO SUMMARY === " + noSummary);
+        int space1 = noSummary.indexOf(" ");
+        Log.d(TAG,"INDEX 1 === " + space1);
+        int space2 = noSummary.indexOf(" ", space1 +1);
+        Log.d(TAG,"INDEX 2 === " + space2);
+        return noSummary.substring(0, space2 + 1);
     }
 
     public boolean isExternalStorageReadable() {
