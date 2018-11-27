@@ -15,17 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
-
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -40,8 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static com.facebook.FacebookSdk.getCacheDir;
-
 
 public class ChatroomFragment extends Fragment {
 
@@ -82,6 +69,7 @@ public class ChatroomFragment extends Fragment {
             String senderId;
             String message;
             String senderDisplayName;
+            String questionID;
             int thisId;
 
             try {
@@ -94,13 +82,17 @@ public class ChatroomFragment extends Fragment {
                 senderDisplayName = data.getString("display_name");
                 senderId = data.getString("uuid");
                 message = data.getString("message");
+                questionID = data.getString("question_id");
                 thisId = data.getInt("id");
             } catch (JSONException e) {
                 return;
             }
 
-                    // add the message to view
-            messageList.add(new Message(thisId, message, senderId, senderDisplayName));
+            // add the message to view
+            String currentQuestion = "SOME_QUESTION";
+            if(currentQuestion.equals(questionID)) {
+                messageList.add(new Message(thisId, message, senderId, senderDisplayName));
+            }
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -205,7 +197,7 @@ public class ChatroomFragment extends Fragment {
                 catch (JSONException e) { }
 
 
-                //socket.emit(getString(R.string.new_msg_event), args);
+                socket.emit(getString(R.string.new_msg_event), args);
 
                 //ALEX - This is the caling convention to change chat rooms
                 //Comment out the above emit() call and uncomment the function call
