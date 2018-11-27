@@ -126,8 +126,9 @@ public class HomeActivity extends AppCompatActivity {
                 fragmentClass = HomeFragment.class;
                 break;
             case R.id.nav_logout:
-               // fragmentClass = HomeFragment.class;
+                fragmentClass = HomeFragment.class;
                 signOutConfirm();
+                break;
             case R.id.nav_settings:
                 fragmentClass = SettingsFragment.class;
                 break;

@@ -1,6 +1,8 @@
 package champagne86.com.classconnect;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.android.volley.Cache;
@@ -35,7 +37,7 @@ public class ApiCaller {
 
     //HTTP request queue - There should only be one of these
     static RequestQueue mRequestQueue;
-    static Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+    static Cache cache;
     static Network network = new BasicNetwork(new HurlStack());
 
     private Context mContext;
@@ -59,6 +61,7 @@ public class ApiCaller {
     public ApiCaller(Context context){
 
         if(mRequestQueue == null) {
+            cache = new DiskBasedCache(context.getCacheDir(), 1024 * 1024);
             //Setup the queue for any HTTP requests
             mRequestQueue = new RequestQueue(cache, network);
             mRequestQueue.start();
@@ -76,7 +79,7 @@ public class ApiCaller {
      *
      * @param uuid The current users uuid
      */
-    public void addUserToDB(String uuid, String name){
+    public void addUserToDB(String uuid, String name, final Intent chatIntent){
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
                 + mContext.getString(R.string.add_user_uuid_suffix)
@@ -97,8 +100,9 @@ public class ApiCaller {
 
                         //ALEX - This is for you
                         //Will return the user object
-
+                        mContext.startActivity(chatIntent);
                         //Call some UI updating function here based on `response`?
+
 
                     }
                 }, new Response.ErrorListener() {
