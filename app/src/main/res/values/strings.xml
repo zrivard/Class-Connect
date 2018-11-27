@@ -22,12 +22,15 @@
 
     <!-- URLs and their modifiers -->
     <string name="app_url">https://classconnect-220321.appspot.com/</string>
-    <string name="change_room_suffix">change-room?question-id=</string>
+    <string name="add_user_uuid_suffix">add-user?uuid=</string>
+    <string name="add_user_name_suffix">&amp;name=</string>
+    <string name="get_question_messages_suffix">get-question-messages?question-id=</string>
     <string name="ask_question_suffix">ask-question/</string>
     <string name="get_questions_suffix">get-questions?class=</string>
     <string name="get_class_info_suffix">get-class-info?class=</string>
     <string name="get_user_classes_suffix">get-user-classes?user=</string>
     <string name="set_user_classes_suffix">set-classes/</string>
+    <string name="close_question_suffix">close-question?question-id=</string>
 
     <!--Socket message event types -->
     <string name="new_msg_event">chat message</string>

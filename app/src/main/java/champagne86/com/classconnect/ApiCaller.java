@@ -48,10 +48,10 @@ public class ApiCaller {
 
     /*
      * Things needed:
-     * - Get a list of classes for any given user:
+     * - Get a list of classes for any given user:      getUserClasses
      * - Get all the fields for a given classroom:      getClassroomInfo
      * - Get all the questions for a given classroom:   getClassQuestions
-     * - Add a new classroom to the user's class list:
+     * - Add a new classroom to the user's class list:  setUserClasses
      * - Add a question to a class:                     askQuestion
      */
 
@@ -70,6 +70,49 @@ public class ApiCaller {
     }
 
     /**
+     * This should be called after the login to ensure that the user
+     * object exists in the database. If it does not exist, it will
+     * be created. If it exists, it will not be changed
+     *
+     * @param uuid The current users uuid
+     */
+    public void addUserToDB(String uuid, String name){
+        //Create the url that will change the chat rooms
+        String url =  mContext.getString(R.string.app_url)
+                + mContext.getString(R.string.add_user_uuid_suffix)
+                + uuid
+                + mContext.getString(R.string.add_user_name_suffix)
+                + name.replace(' ', '_');
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                        //ALEX - This is for you
+                        //Will return the user object
+
+                        //Call some UI updating function here based on `response`?
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
+    /**
      * Changes the current chat room that the user is in.
      *   This is done by first getting all of the chat
      *   messages from the database in the new room, and
@@ -82,7 +125,7 @@ public class ApiCaller {
 
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
-                    + mContext.getString(R.string.change_room_suffix)
+                    + mContext.getString(R.string.get_question_messages_suffix)
                     + newRoom;
 
         //Create the request and what should happen on return
@@ -257,6 +300,12 @@ public class ApiCaller {
         mRequestQueue.add(jsonObjectRequest);
     }
 
+
+    /**
+     * Gets all the classes that the user is registered in.
+     *
+     * @param userID Current user's uuid
+     */
     public void getUserClasses(String userID){
         //Create the url that will get all the info
         String url =  mContext.getString(R.string.app_url)
@@ -293,6 +342,14 @@ public class ApiCaller {
         mRequestQueue.add(jsonObjectRequest);
     }
 
+
+    /**
+     * Sets the classes that the user is registered for
+     *
+     * @param userID The current user's uuid
+     * @param classes Hashmap detailing the names of the classes
+     *                and their status in them
+     */
     public void setUserClasses(String userID, HashMap<String, Boolean> classes){
         //Create the url that will get all the info
         String url =  mContext.getString(R.string.app_url)
@@ -316,9 +373,6 @@ public class ApiCaller {
         }
 
 
-
-
-
         //Create the request and what should happen on return
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
@@ -333,6 +387,48 @@ public class ApiCaller {
                         //ALEX - This is for you
                         //`response` is a JSONObject containing the same
                         //data that you sent as params
+
+                        //Call some UI updating function here based on `response`?
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Maybe do something?
+                    }
+                });
+
+        //Add to the queue of requests to be sent
+        mRequestQueue.add(jsonObjectRequest);
+    }
+
+
+    /**
+     * Closes a question to all new messages and triggers the
+     * building of the RTF file for download if not already done
+     *
+     * @param questionID Question ID of the question to close
+     */
+    public void closeQuestion(String questionID){
+        //Create the url that will get all the info
+        String url =  mContext.getString(R.string.app_url)
+                + mContext.getString(R.string.close_question_suffix)
+                + questionID;
+
+
+        //Create the request and what should happen on return
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, response.toString(4));
+                        }catch(JSONException e){
+                            Log.e(TAG, e.getMessage());
+                        }
+
+                        //ALEX - This is for you
+                        //`response` is a JSONObject containing the
+                        //question object
 
                         //Call some UI updating function here based on `response`?
                     }
