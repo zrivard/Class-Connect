@@ -8,6 +8,8 @@
     <string name="chatrooms">Chatrooms</string>
     <string name="logout">Logout</string>
     <string name="homeSettings">Settings</string>
+    <string name="upvoteMessage">upvote message</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -35,4 +37,7 @@
     <!--Socket message event types -->
     <string name="new_msg_event">chat message</string>
     <string name="change_room_event">change room</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="new_upvote_event">upvote message</string>
+    <string name="new_downvote_event">downvote message</string>
 </resources>
