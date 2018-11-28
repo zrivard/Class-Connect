@@ -151,7 +151,9 @@ public class SettingsFragment extends Fragment {
         Log.d(TAG,"INDEX 1 === " + space1);
         int space2 = noSummary.indexOf(" ", space1 +1);
         Log.d(TAG,"INDEX 2 === " + space2);
-        return noSummary.substring(0, space2 + 1);
+
+        String rep = noSummary.substring(0, space2 + 1).replace(' ', '_');
+        return rep;
     }
 
     public boolean isExternalStorageReadable() {

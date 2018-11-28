@@ -70,6 +70,8 @@ public class HomeFragment extends Fragment {
             getClasses();
         }
 
+        updateClassList();
+
     }
 
     private void updateClassList() {
@@ -78,7 +80,9 @@ public class HomeFragment extends Fragment {
             public void run() {
                 mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
                 mAdapter.notifyDataSetChanged();
-                mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                if(mAdapter.getItemCount() > 0) {
+                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                }
             }
         });
 
