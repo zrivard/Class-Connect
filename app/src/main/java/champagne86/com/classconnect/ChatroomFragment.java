@@ -42,9 +42,11 @@ public class ChatroomFragment extends Fragment {
     private int nextMessageID = 1;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private List messageList = new ArrayList();
+    public static List messageList = new ArrayList();
     private String questionName;
     private String classroom;
+
+    public static boolean gotMessages = false;
 
     private ApiCaller mApiCaller;
 
@@ -54,8 +56,10 @@ public class ChatroomFragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        questionName =  bundle.getString("question");
-        classroom = bundle.getString("class");
+        if(bundle != null) {
+            questionName = bundle.getString("question");
+            classroom = bundle.getString("class");
+        }
 
         return inflater.inflate(R.layout.activity_chatroom, container, false);
     }
@@ -67,6 +71,18 @@ public class ChatroomFragment extends Fragment {
 
         createRecyclerView(view);
 
+    }
+
+    private void updateChatUI(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
+                mAdapter.notifyDataSetChanged();
+                if(mAdapter.getItemCount() > 0)
+                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+            }
+        });
     }
 
 
@@ -105,31 +121,11 @@ public class ChatroomFragment extends Fragment {
                 Log.i("Error", "ERROR");
             }
 
-                    // add the message to view
-            Switch anonUser = (Switch) getView().findViewById(R.id.anonUserSwitch);
-
-            if (!anonUser.isChecked()) {
-                messageList.add(new Message(thisId, message, senderId, senderDisplayName));
-            }
-            else {
-                messageList.add(new Message(thisId, message, senderId, "Anonymous User"));
-            }
-
-
-
 
             // add the message to view (sanity check that the message was for this room
-            String currentQuestion = "SOME_QUESTION";
-            if(currentQuestion.equals(questionID)) {
+            if(questionName.equals(questionID)) {
                 messageList.add(new Message(thisId, message, senderId, senderDisplayName));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
-                        mAdapter.notifyDataSetChanged();
-                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                    }
-                });
+                updateChatUI();
             }else{
                 Log.d(TAG, questionID);
                 Log.d(TAG, "Got a message destined for another chat room!");
@@ -161,6 +157,8 @@ public class ChatroomFragment extends Fragment {
 
 
 
+
+
         //messageList = HTTP REQUEST FOR JSON OBJECT
 
         //String room = BASE_APP_URL + "hash";
@@ -172,9 +170,12 @@ public class ChatroomFragment extends Fragment {
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            mApiCaller.changeChatRoom(mSocket, questionName);
+            if(!gotMessages){
+                mApiCaller.changeChatRoom(mSocket, questionName, getView());
+            }
 
             setupSendMessageButton(mSocket, user);
+            updateChatUI();
         } catch (URISyntaxException e) {
             Log.e(TAG, "Socket URI error!");
             Log.e(TAG, "\tError: " +  e.getMessage());
@@ -207,8 +208,8 @@ public class ChatroomFragment extends Fragment {
 
                 JSONObject args = new JSONObject();
 
-                boolean anon_login = false; //This can be set somewhere?
-                String display_name = anon_login ? "Anon" : user.getDisplayName();
+                Switch anonUser = (Switch) getView().findViewById(R.id.anonUserSwitch);
+                String display_name = anonUser.isChecked() ? "Anonymous User" : user.getDisplayName();
 
                 try {
                     args.put("id", nextMessageID++);

@@ -134,7 +134,7 @@ public class ApiCaller {
      * @param socket The socket we wish to switch over
      * @param newRoom The new room that we wish to enter
      */
-    public void changeChatRoom(final Socket socket, final String newRoom){
+    public void changeChatRoom(final Socket socket, final String newRoom, final View v){
 
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
@@ -157,6 +157,40 @@ public class ApiCaller {
                         //room that you requested to enter
 
                         //Call some UI updating function here based on `response`?
+                        ArrayList<Message> messages = new ArrayList<Message>();
+                        try {
+                            JSONArray jsonMessages = response.getJSONArray("Messages");
+
+                            for (int i = 0; i < jsonMessages.length(); i++) {
+                                JSONObject jsonQuestion = (JSONObject)jsonMessages.get(i);
+                                messages.add(new Message(
+                                        jsonQuestion.getString("message_id"),
+                                        jsonQuestion.getString("message"),
+                                        jsonQuestion.getString("user_id"),
+                                        jsonQuestion.getString("display_name")
+                                ));
+                            }
+                        }catch(JSONException e){
+                            Log.d(TAG, e.getMessage());
+                        }
+
+
+                        //QuestionFragment fragment = new QuestionFragment();
+                        ChatroomFragment.gotMessages = true;
+                        ChatroomFragment.messageList = messages;
+
+                        Fragment fragment = null;
+                        Class fragmentClass = ChatroomFragment.class;
+                        try {
+                            fragment = (Fragment) fragmentClass.newInstance();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // Insert the fragment by replacing any existing fragment
+                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
                         //Now that we have the messages, update our socket
                         socket.emit(mContext.getString(R.string.change_room_event), newRoom);
