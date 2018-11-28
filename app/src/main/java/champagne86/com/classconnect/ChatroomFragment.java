@@ -18,17 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
-
 import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,8 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static com.facebook.FacebookSdk.getCacheDir;
-
 
 public class ChatroomFragment extends Fragment {
 
@@ -84,8 +71,12 @@ public class ChatroomFragment extends Fragment {
             JSONObject data;
             String senderId = "";
             String message = "";
+
             String senderDisplayName = "";
             String thisId = "";
+
+
+            String questionID= "";
 
             try {
                 if(args[0].getClass().equals(JSONObject.class)){
@@ -94,10 +85,14 @@ public class ChatroomFragment extends Fragment {
                     data = new JSONObject((String)args[0]);
                 }
 
+                Log.d(TAG, data.toString(4));
+
                 senderDisplayName = data.getString("display_name");
                 senderId = data.getString("user_id");
                 message = data.getString("message");
+
                 thisId = data.getString("message_id");
+                questionID = data.getString("question_id");
             } catch (JSONException e) {
                 Log.i("Error", "ERROR");
             }
@@ -112,14 +107,27 @@ public class ChatroomFragment extends Fragment {
                 messageList.add(new Message(thisId, message, senderId, "Anonymous User"));
             }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                }
-            });
+
+
+
+            // add the message to view (sanity check that the message was for this room
+            String currentQuestion = "SOME_QUESTION";
+            if(currentQuestion.equals(questionID)) {
+                messageList.add(new Message(thisId, message, senderId, senderDisplayName));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                    }
+                });
+            }else{
+                Log.d(TAG, questionID);
+                Log.d(TAG, "Got a message destined for another chat room!");
+            }
+
+
 
         }
 
