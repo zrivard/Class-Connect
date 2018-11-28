@@ -166,7 +166,7 @@ public class ApiCaller {
     }
 
 
-    /**
+    /*
      * Sends a question to the database
      *
      * @param questionText The actual question that should be displayed to the users
@@ -249,7 +249,7 @@ public class ApiCaller {
                         //`response` is a JSONObject containing class requested and
                         //all of th questions in the class
 
-                        response.
+
 
 
                         //Call some UI updating function here based on `response`?
@@ -266,7 +266,7 @@ public class ApiCaller {
     }
 
 
-    /**
+    /*
      * Get all the information associated with a given classroom
      *
      * @param classroom The name of the classroom

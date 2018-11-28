@@ -2,10 +2,9 @@ package champagne86.com.classconnect;
 
 
 import android.os.Bundle;
-<<<<<<< Updated upstream
+
 import android.support.design.widget.TextInputEditText;
-=======
->>>>>>> Stashed changes
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,10 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< Updated upstream
+
 import android.view.inputmethod.InputMethodManager;
-=======
->>>>>>> Stashed changes
+
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
@@ -39,11 +37,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
+
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-=======
->>>>>>> Stashed changes
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,12 +54,9 @@ public class QuestionFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List questionList = new ArrayList();
-<<<<<<< Updated upstream
+
     private String classroomName;
 
-=======
-    private Classroom thisClassroom;
->>>>>>> Stashed changes
 
     private ApiCaller mApiCaller;
 
@@ -76,17 +70,12 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-<<<<<<< Updated upstream
+
 
         Bundle bundle = getArguments();
         classroomName = bundle.getString("class");
         return inflater.inflate(R.layout.fragment_question, container, false);
 
-=======
-        return inflater.inflate(R.layout.fragment_question, container, false);
-        //Bundle bundle = getArguments();
-        //thisClassroom = (Classroom) bundle.get("class_id");
->>>>>>> Stashed changes
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -108,17 +97,12 @@ public class QuestionFragment extends Fragment {
             String questionId = "";
 
             try {
-<<<<<<< Updated upstream
+
                 if (args[0].getClass().equals(JSONObject.class)) {
                     data = (JSONObject) args[0];
                 } else {
                     data = new JSONObject((String) args[0]);
-=======
-                if(args[0].getClass().equals(JSONObject.class)){
-                    data = (JSONObject) args[0];
-                } else{
-                    data = new JSONObject((String)args[0]);
->>>>>>> Stashed changes
+
                 }
 
                 Log.d(TAG, data.toString(4));
@@ -128,19 +112,15 @@ public class QuestionFragment extends Fragment {
                 classroom = data.getString("classroom");
                 title = data.getString("title");
                 body = data.getString("body");
-<<<<<<< Updated upstream
 
-                questionId = data.getString("id");
-
-=======
                 questionId = data.getString("question_id");
->>>>>>> Stashed changes
+
             } catch (JSONException e) {
                 Log.i("Error", "ERROR");
             }
 
             // add the message to view
-<<<<<<< Updated upstream
+
             Switch anonUser = (Switch) getView().findViewById(R.id.anonQuestionSwitch);
 
             if (!anonUser.isChecked()) {
@@ -148,24 +128,8 @@ public class QuestionFragment extends Fragment {
             } else {
                 questionList.add(new Question(questionId, title, body, classroom, senderId, "Anonymous"));
             }
-=======
-            Switch anonUser = (Switch) getView().findViewById(R.id.anonUserSwitch);
-
-            if (!anonUser.isChecked()) {
-                questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-            }
-            else {
-                questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-            }
 
 
->>>>>>> Stashed changes
-
-
-            // add the message to view (sanity check that the message was for this room
-            //String currentQuestion = "SOME_QUESTION";
-
-<<<<<<< Updated upstream
             // questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -179,29 +143,9 @@ public class QuestionFragment extends Fragment {
     };
 
 
-    private void createRecyclerView(View v) {
-=======
-                questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
-                        mAdapter.notifyDataSetChanged();
-                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                    }
-                });
-
-
-
-
-        }
-
-    };
-
-
 
     private void createRecyclerView(View v){
->>>>>>> Stashed changes
+
         RecyclerView.LayoutManager mLayoutManager;
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.questionsRecyclerView);
@@ -226,10 +170,8 @@ public class QuestionFragment extends Fragment {
 
         mApiCaller = new ApiCaller(this.getContext());
 
-<<<<<<< Updated upstream
         mApiCaller.getClassQuestions(classroomName, mAdapter, questionList);
-=======
->>>>>>> Stashed changes
+
         // setupLoginButton(auth);
 
 
@@ -252,16 +194,13 @@ public class QuestionFragment extends Fragment {
 
     public void setupSendQuestionButton(final Socket socket, final FirebaseUser user) {
         Button sendQuestion = (Button) questionFrgmt.findViewById(R.id.postQuestionButton);
-<<<<<<< Updated upstream
+
         final TextInputEditText titleText = (TextInputEditText) questionFrgmt.findViewById(R.id.questionTitleInput);
         final TextInputEditText bodyText = (TextInputEditText) questionFrgmt.findViewById(R.id.questionBodyInput);
 
         final Switch anon = (Switch) questionFrgmt.findViewById(R.id.anonQuestionSwitch);
 
-=======
-        final AutoCompleteTextView titleText = (AutoCompleteTextView) questionFrgmt.findViewById(R.id.questionTitleInput);
-        final MultiAutoCompleteTextView bodyText = (MultiAutoCompleteTextView) questionFrgmt.findViewById(R.id.questionBodyInput);
->>>>>>> Stashed changes
+
 
         sendQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,7 +208,7 @@ public class QuestionFragment extends Fragment {
 
                 JSONObject args = new JSONObject();
 
-<<<<<<< Updated upstream
+
 
                 //boolean anon_login = anon.isChecked(); //This can be set somewhere?
 
@@ -278,37 +217,22 @@ public class QuestionFragment extends Fragment {
                 try {
                     //args.put("id", nextMessageID++);
                     args.put("display_name", user.getDisplayName());
-=======
-                boolean anon_login = false; //This can be set somewhere?
-                String display_name = anon_login ? "Anon" : user.getDisplayName();
-
-                try {
-                    //args.put("id", nextMessageID++);
-                    args.put("display_name", display_name);
->>>>>>> Stashed changes
                     args.put("title", titleText.getText().toString());
                     args.put("body", bodyText.getText().toString());
                     args.put("user_id", user.getUid());
 
 
-                    //These params will have to be updated
-<<<<<<< Updated upstream
 
                     args.put("classroom", classroomName);
                     args.put("question_id", "SOME_QUESTION");
                 } catch (JSONException e) {
                 }
-=======
-                    args.put("classroom", thisClassroom.getName());
-                    args.put("question_id", "SOME_QUESTION");
-                }
-                catch (JSONException e) { }
->>>>>>> Stashed changes
+
 
 
                 socket.emit(getString(R.string.new_question_event), args);
 
-<<<<<<< Updated upstream
+
                 try {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
@@ -319,8 +243,6 @@ public class QuestionFragment extends Fragment {
                 titleText.setText("");
                 bodyText.setText("");
 
-=======
->>>>>>> Stashed changes
             }
         });
 
