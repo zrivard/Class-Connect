@@ -3,6 +3,7 @@ package champagne86.com.classconnect;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.volley.Cache;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.grpc.Metadata;
 
@@ -224,7 +226,7 @@ public class ApiCaller {
      *
      * @param classRoom String name of the class
      */
-    public void getClassQuestions(String classRoom){
+    public void getClassQuestions(String classRoom, RecyclerView.Adapter adapter, List questionList){
 
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
@@ -246,6 +248,8 @@ public class ApiCaller {
                         //ALEX - This is for you
                         //`response` is a JSONObject containing class requested and
                         //all of th questions in the class
+
+                        response.
 
 
                         //Call some UI updating function here based on `response`?

@@ -83,6 +83,7 @@ public class QuestionAdapter extends RecyclerView.Adapter {
         QuestionAdapter.ViewHolder question;
         question =(QuestionAdapter.ViewHolder) viewHolder;
         final Question thisQuestion = questionList.get(i);
+        final String classroom = thisQuestion.getClassroom();
         question.title.setText(thisQuestion.getTitle());
         question.question.setText(thisQuestion.getBody());
         question.author.setText(thisQuestion.getSenderName());
@@ -95,7 +96,10 @@ public class QuestionAdapter extends RecyclerView.Adapter {
                 /*remove(position);*/
 
                 Bundle bundle = new Bundle();
-                bundle.putString("class", thisQuestion.getId());
+                bundle.putString("question", thisQuestion.getId());
+                bundle.putString("class", classroom);
+
+
 
                 Log.d("Selected class:", thisQuestion.getId());
 

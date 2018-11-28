@@ -44,6 +44,7 @@ public class ChatroomFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private List messageList = new ArrayList();
     private String questionName;
+    private String classroom;
 
     private ApiCaller mApiCaller;
 
@@ -54,6 +55,8 @@ public class ChatroomFragment extends Fragment {
 
         Bundle bundle = getArguments();
         questionName =  bundle.getString("question");
+        classroom = bundle.getString("class");
+
         return inflater.inflate(R.layout.activity_chatroom, container, false);
     }
 
@@ -168,6 +171,9 @@ public class ChatroomFragment extends Fragment {
             mAdapter = new MessageAdapter(chatFrgmt, messageList, user, mSocket, chatFrgmt);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            mApiCaller.changeChatRoom(mSocket, questionName);
+
             setupSendMessageButton(mSocket, user);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Socket URI error!");
@@ -212,7 +218,7 @@ public class ChatroomFragment extends Fragment {
 
 
                     //These params will have to be updated
-                    args.put("classroom", "CPEN_311");
+                    args.put("classroom", classroom);
                     args.put("question_id", questionName);
                 }
                 catch (JSONException e) { }
@@ -224,7 +230,7 @@ public class ChatroomFragment extends Fragment {
                 //Comment out the above emit() call and uncomment the function call
                 //to see it in action. (It will print all the messages into the log for you)
 
-                //mApiCaller.changeChatRoom(socket, "SOME_QUESTION");
+
                 //mApiCaller.askQuestion("Question Title", "Question body", "CPEN_311", user.getUid());
                 //mApiCaller.getClassQuestions("CPEN_311");
                 //mApiCaller.getClassroomInfo("CPEN_311");

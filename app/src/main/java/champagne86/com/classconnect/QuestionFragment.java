@@ -48,7 +48,7 @@ public class QuestionFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List questionList = new ArrayList();
-    private String clasroomName;
+    private String classroomName;
 
 
     private ApiCaller mApiCaller;
@@ -65,7 +65,7 @@ public class QuestionFragment extends Fragment {
         // Inflate the layout for this fragment
 
         Bundle bundle = getArguments();
-        clasroomName =  bundle.getString("class");
+        classroomName = bundle.getString("class");
         return inflater.inflate(R.layout.fragment_question, container, false);
 
     }
@@ -89,10 +89,10 @@ public class QuestionFragment extends Fragment {
             String questionId = "";
 
             try {
-                if(args[0].getClass().equals(JSONObject.class)){
+                if (args[0].getClass().equals(JSONObject.class)) {
                     data = (JSONObject) args[0];
-                } else{
-                    data = new JSONObject((String)args[0]);
+                } else {
+                    data = new JSONObject((String) args[0]);
                 }
 
                 Log.d(TAG, data.toString(4));
@@ -114,37 +114,28 @@ public class QuestionFragment extends Fragment {
 
             if (!anonUser.isChecked()) {
                 questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-            }
-            else {
+            } else {
                 questionList.add(new Question(questionId, title, body, classroom, senderId, "Anonymous"));
             }
-
-
 
 
             // add the message to view (sanity check that the message was for this room
             //String currentQuestion = "SOME_QUESTION";
 
-               // questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
-                        mAdapter.notifyDataSetChanged();
-                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                    }
-                });
-
-
-
-
+            // questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
+                    mAdapter.notifyDataSetChanged();
+                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                }
+            });
         }
-
     };
 
 
-
-    private void createRecyclerView(View v){
+    private void createRecyclerView(View v) {
         RecyclerView.LayoutManager mLayoutManager;
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.questionsRecyclerView);
@@ -169,6 +160,7 @@ public class QuestionFragment extends Fragment {
 
         mApiCaller = new ApiCaller(this.getContext());
 
+        mApiCaller.getClassQuestions(classroomName, mAdapter, questionList);
         // setupLoginButton(auth);
 
 
@@ -206,11 +198,11 @@ public class QuestionFragment extends Fragment {
 
                 //boolean anon_login = anon.isChecked(); //This can be set somewhere?
 
-                String display_name = anon.isChecked() ? "Anon" : user.getDisplayName();
+                //  String display_name = anon.isChecked() ? "Anon" : user.getDisplayName();
 
                 try {
                     //args.put("id", nextMessageID++);
-                    args.put("display_name", display_name);
+                    args.put("display_name", user.getDisplayName());
                     args.put("title", titleText.getText().toString());
                     args.put("body", bodyText.getText().toString());
                     args.put("user_id", user.getUid());
@@ -218,16 +210,16 @@ public class QuestionFragment extends Fragment {
 
                     //These params will have to be updated
 
-                    args.put("classroom", clasroomName);
+                    args.put("classroom", classroomName);
                     args.put("question_id", "SOME_QUESTION");
+                } catch (JSONException e) {
                 }
-                catch (JSONException e) { }
 
 
                 socket.emit(getString(R.string.new_question_event), args);
 
-                try  {
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                try {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                 } catch (Exception e) {
 
