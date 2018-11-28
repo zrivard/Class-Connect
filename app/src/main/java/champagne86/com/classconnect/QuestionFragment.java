@@ -44,7 +44,7 @@ public class QuestionFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List questionList = new ArrayList();
-    private Classroom thisClassroom;
+    private String clasroomName;
 
     private ApiCaller mApiCaller;
 
@@ -58,9 +58,10 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Bundle bundle = getArguments();
+        clasroomName =  bundle.getString("class");
         return inflater.inflate(R.layout.fragment_question, container, false);
-        //Bundle bundle = getArguments();
-        //thisClassroom = (Classroom) bundle.get("class_id");
+
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -203,7 +204,7 @@ public class QuestionFragment extends Fragment {
 
 
                     //These params will have to be updated
-                    args.put("classroom", thisClassroom.getName());
+                    args.put("classroom", clasroomName);
                     args.put("question_id", "SOME_QUESTION");
                 }
                 catch (JSONException e) { }

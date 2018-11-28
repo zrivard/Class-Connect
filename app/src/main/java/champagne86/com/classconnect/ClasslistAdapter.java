@@ -56,7 +56,7 @@ public class ClasslistAdapter extends RecyclerView.Adapter {
                     Log.d("Selected class:", classroom.getName());
 
                     Fragment fragment = null;
-                    Class fragmentClass = SettingsFragment.class;
+                    Class fragmentClass = QuestionFragment.class;
                     try {
                         fragment = (Fragment) fragmentClass.newInstance();
                     } catch (Exception e) {
