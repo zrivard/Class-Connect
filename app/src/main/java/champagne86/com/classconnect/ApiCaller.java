@@ -1,6 +1,5 @@
 package champagne86.com.classconnect;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -31,14 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import io.grpc.Metadata;
-
-import static com.facebook.FacebookSdk.getCacheDir;
 
 public class ApiCaller {
 
