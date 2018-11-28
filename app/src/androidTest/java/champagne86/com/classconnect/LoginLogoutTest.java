@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -25,13 +26,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class SettingsTest {
+public class LoginLogoutTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void settingsTest() {
+    public void loginLogoutTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -40,7 +41,7 @@ public class SettingsTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        try{
+        try {
             ViewInteraction loginButton = onView(
                     allOf(withId(R.id.login_button), withText("Continue with Facebook"),
                             childAtPosition(
@@ -51,9 +52,11 @@ public class SettingsTest {
                             isDisplayed()));
             loginButton.perform(click());
         }
-        catch(Exception e) {
+        catch(Exception e){
 
         }
+
+
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -84,16 +87,37 @@ public class SettingsTest {
                                 childAtPosition(
                                         withId(R.id.nav_view),
                                         0)),
-                        2),
+                        3),
                         isDisplayed()));
         navigationMenuItemView.perform(click());
+
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(android.R.id.button1), withText("Yes"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.buttonPanel),
+                                        0),
+                                3)));
+        appCompatButton.perform(scrollTo(), click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-
+        ViewInteraction button = onView(
+                allOf(withId(R.id.login_button),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                0),
+                        isDisplayed()));
+        button.check(matches(isDisplayed()));
 
     }
 
