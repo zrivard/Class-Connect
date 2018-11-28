@@ -30,7 +30,8 @@ public class MessageTest {
         testMsg1.downVoteMsg("anotherUser");
         assertTrue(testMsg1.getUpvotes().equals(Integer.toString(0)));
         assertTrue(testMsg1.getRating() == 0);
-        testMsg1.getUsersVotedList();
+        List<String> retList = testMsg1.getUsersVotedList();
+        assertTrue(retList.contains("thisUser") && retList.contains("anotherUser"));
     }
     @Test
     public void getSenderID() {
