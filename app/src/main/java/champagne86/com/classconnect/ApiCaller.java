@@ -1,6 +1,5 @@
 package champagne86.com.classconnect;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -17,18 +16,11 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.Key;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import io.grpc.Metadata;
-
-import static com.facebook.FacebookSdk.getCacheDir;
 
 public class ApiCaller {
 
