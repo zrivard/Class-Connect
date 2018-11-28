@@ -158,6 +158,8 @@ public class ApiCaller {
                         ArrayList<Message> messages = new ArrayList<Message>();
                         try {
                             JSONArray jsonMessages = response.getJSONArray("Messages");
+                            ChatroomFragment.messageList.clear();
+                            //ChatroomFragment.messageIDs.clear();
 
                             for (int i = 0; i < jsonMessages.length(); i++) {
                                 JSONObject jsonQuestion = (JSONObject)jsonMessages.get(i);
@@ -167,6 +169,8 @@ public class ApiCaller {
                                         jsonQuestion.getString("user_id"),
                                         jsonQuestion.getString("display_name")
                                 ));
+
+                                //ChatroomFragment.messageIDs.add(jsonQuestion.getString("message_id"));
                             }
                         }catch(JSONException e){
                             Log.d(TAG, e.getMessage());

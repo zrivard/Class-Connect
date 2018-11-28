@@ -23,6 +23,7 @@ import com.github.nkzawa.emitter.Emitter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -44,12 +45,14 @@ public class ChatroomFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     public static List messageList = new ArrayList();
+    public static HashSet<String> messageIDs = new HashSet<String>();
     private static String questionName;
     private String classroom;
 
     public static boolean gotMessages = false;
 
     private ApiCaller mApiCaller;
+    private static Socket mSocket;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,7 +127,8 @@ public class ChatroomFragment extends Fragment {
 
 
             // add the message to view (sanity check that the message was for this room
-            if(questionName.equals(questionID)) {
+            if(questionName.equals(questionID) /*&& !messageIDs.contains(questionID)*/) {
+                messageIDs.add(questionID);
                 messageList.add(new Message(thisId, message, senderId, senderDisplayName));
                 updateChatUI();
             }else{
@@ -145,13 +149,14 @@ public class ChatroomFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         chatFrgmt = getActivity();
 
-        Socket mSocket = null;
+
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         try{
             mSocket = IO.socket(getString(R.string.app_url));
             mSocket.on(getString(R.string.new_msg_event), onNewMessage);
             mSocket.connect();
+
         }catch (URISyntaxException e){
             Log.e(TAG, e.getMessage());
         }
@@ -262,9 +267,49 @@ public class ChatroomFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mSocket.off(getString(R.string.new_msg_event));
+        mSocket.disconnect();
+        mSocket.close();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSocket.off(getString(R.string.new_msg_event));
+        mSocket.disconnect();
+        mSocket.close();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSocket.off(getString(R.string.new_msg_event));
+        mSocket.disconnect();
+        mSocket.close();
 
 
-//    public void signOut(final FirebaseAuth auth) {
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mSocket.off(getString(R.string.new_msg_event));
+        mSocket.disconnect();
+        mSocket.close();
+    }
+
+    //    public void signOut(final FirebaseAuth auth) {
 //        auth.signOut();
 //
 //        LoginManager.getInstance().logOut();

@@ -1,0 +1,673 @@
+{
+	"id": "0284ee4b-9f71-4ca3-ad3f-a219e62607b2",
+	"name": "Chat",
+	"allTests": [],
+	"timestamp": "2018-11-28T17:29:13.431Z",
+	"collection_id": "e8dcd479-2095-46b7-af25-a52c01241b95",
+	"folder_id": 0,
+	"target_type": "collection",
+	"environment_id": "0",
+	"data": [],
+	"delay": 1000,
+	"count": 1,
+	"collection": {
+		"id": "e8dcd479-2095-46b7-af25-a52c01241b95",
+		"name": "Chat",
+		"description": null,
+		"auth": null,
+		"events": null,
+		"variables": null,
+		"order": [
+			"c6750208-115e-4d2b-85c6-30f82b3e51d8",
+			"dd02cba2-268e-403e-ad50-a85075ccb8ee",
+			"102ec5a7-13eb-4ba8-88ea-7bd034bc0f86",
+			"b0cbb83f-96d1-42ee-9b0d-cba3d89377ba",
+			"5dd9e226-0182-4073-8b22-8a93d80377b5",
+			"96267286-d18c-4f06-a3c7-f226635586f3",
+			"07ae436b-72dc-454f-87f8-958c2377ddce",
+			"3174ab82-01b7-4429-b38c-0323f90fbf25",
+			"29032fd3-8ce7-434e-baf3-7438f7dafd44",
+			"3eb3bcb5-73bb-473e-a25f-420bf2cf5ae5",
+			"a98227e3-ac3b-4f20-af47-8b0eea8803c5",
+			"5cf243a4-024f-4633-9056-1b29551d58e3"
+		],
+		"folders_order": [],
+		"owner": "5778504",
+		"permissions": {},
+		"favorite": true,
+		"shared": false,
+		"type": "collection",
+		"depth": 0
+	},
+	"folder": null,
+	"environment": null,
+	"globals": [],
+	"results": [
+		{
+			"name": "GetSocket",
+			"id": "c6750208-115e-4d2b-85c6-30f82b3e51d8",
+			"url": "https://classconnect-220321.appspot.com/",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {},
+			"times": [
+				"69"
+			],
+			"allTests": [
+				{}
+			],
+			"time": "69",
+			"totalRequestTime": "69",
+			"iterationResults": {}
+		},
+		{
+			"name": "AskQuestion",
+			"id": "dd02cba2-268e-403e-ad50-a85075ccb8ee",
+			"url": "https://classconnect-220321.appspot.com/ask-question/",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"70"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "70",
+			"totalRequestTime": "70",
+			"iterationResults": {}
+		},
+		{
+			"name": "GetMessagesInQuestion",
+			"id": "96267286-d18c-4f06-a3c7-f226635586f3",
+			"url": "https://classconnect-220321.appspot.com/get-question-messages?question-id=TEST_QUESTION",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"280"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "280",
+			"totalRequestTime": "280",
+			"iterationResults": {}
+		},
+		{
+			"name": "GetClassQuestions",
+			"id": "07ae436b-72dc-454f-87f8-958c2377ddce",
+			"url": "https://classconnect-220321.appspot.com/get-questions?class=CPEN_321",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"275"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "275",
+			"totalRequestTime": "275",
+			"iterationResults": {}
+		},
+		{
+			"name": "GetClassInfo",
+			"id": "3174ab82-01b7-4429-b38c-0323f90fbf25",
+			"url": "https://classconnect-220321.appspot.com/get-class-info?class=CPEN_321",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"474"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "474",
+			"totalRequestTime": "474",
+			"iterationResults": {}
+		},
+		{
+			"name": "GetUserClasses",
+			"id": "29032fd3-8ce7-434e-baf3-7438f7dafd44",
+			"url": "https://classconnect-220321.appspot.com/get-user-classes?user=t4xjKuL65Qba9rIKo1ICbBMZ0Ng2",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"172"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "172",
+			"totalRequestTime": "172",
+			"iterationResults": {}
+		},
+		{
+			"name": "SetUserClasses",
+			"id": "3eb3bcb5-73bb-473e-a25f-420bf2cf5ae5",
+			"url": "https://classconnect-220321.appspot.com/set-classes/",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"76"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "76",
+			"totalRequestTime": "76",
+			"iterationResults": {}
+		},
+		{
+			"name": "CloseQuestion",
+			"id": "a98227e3-ac3b-4f20-af47-8b0eea8803c5",
+			"url": "https://classconnect-220321.appspot.com/close-question?question-id=mynLIqEbHXA0O79IHyLr",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "Data was returned",
+				"status": "pass"
+			},
+			"testPassFailCounts": {
+				"Data was returned": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"97"
+			],
+			"allTests": [
+				{
+					"Data was returned": true
+				}
+			],
+			"time": "97",
+			"totalRequestTime": "97",
+			"iterationResults": {}
+		},
+		{
+			"name": "AddUser",
+			"id": "5cf243a4-024f-4633-9056-1b29551d58e3",
+			"url": "https://classconnect-220321.appspot.com/add-user?uuid=t4xjKuL65Qba9rIKo1ICbBMZ0Ng2&name=Zach_Rivard",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {
+				"name": "JSON object was returned",
+				"status": "pass",
+				"Correct fields were returned": true,
+				"Fields contained appropriate data": true
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				"169"
+			],
+			"allTests": [
+				{
+					"JSON object was returned": true,
+					"Correct fields were returned": true,
+					"Fields contained appropriate data": true
+				}
+			],
+			"time": "169",
+			"totalRequestTime": "169",
+			"iterationResults": {}
+		}
+	],
+	"totalPass": 22,
+	"totalFail": 0,
+	"totalTime": 1682,
+	"lifecycle": "done",
+	"requests": [
+		{
+			"name": "GetSocket",
+			"id": "c6750208-115e-4d2b-85c6-30f82b3e51d8",
+			"url": "https://classconnect-220321.appspot.com/",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {}
+		},
+		{
+			"name": "AskQuestion",
+			"id": "dd02cba2-268e-403e-ad50-a85075ccb8ee",
+			"url": "https://classconnect-220321.appspot.com/ask-question/",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GetMessagesInQuestion",
+			"id": "96267286-d18c-4f06-a3c7-f226635586f3",
+			"url": "https://classconnect-220321.appspot.com/get-question-messages?question-id=TEST_QUESTION",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GetClassQuestions",
+			"id": "07ae436b-72dc-454f-87f8-958c2377ddce",
+			"url": "https://classconnect-220321.appspot.com/get-questions?class=CPEN_321",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GetClassInfo",
+			"id": "3174ab82-01b7-4429-b38c-0323f90fbf25",
+			"url": "https://classconnect-220321.appspot.com/get-class-info?class=CPEN_321",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "GetUserClasses",
+			"id": "29032fd3-8ce7-434e-baf3-7438f7dafd44",
+			"url": "https://classconnect-220321.appspot.com/get-user-classes?user=t4xjKuL65Qba9rIKo1ICbBMZ0Ng2",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "SetUserClasses",
+			"id": "3eb3bcb5-73bb-473e-a25f-420bf2cf5ae5",
+			"url": "https://classconnect-220321.appspot.com/set-classes/",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "CloseQuestion",
+			"id": "a98227e3-ac3b-4f20-af47-8b0eea8803c5",
+			"url": "https://classconnect-220321.appspot.com/close-question?question-id=mynLIqEbHXA0O79IHyLr",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"Data was returned": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		},
+		{
+			"name": "AddUser",
+			"id": "5cf243a4-024f-4633-9056-1b29551d58e3",
+			"url": "https://classconnect-220321.appspot.com/add-user?uuid=t4xjKuL65Qba9rIKo1ICbBMZ0Ng2&name=Zach_Rivard",
+			"time": "2018-11-28T17:29:13.431Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {
+				"JSON object was returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Correct fields were returned": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Fields contained appropriate data": {
+					"pass": 1,
+					"fail": 0
+				}
+			}
+		}
+	],
+	"synced": false
+}
