@@ -141,9 +141,13 @@ public class QuestionFragment extends Fragment{
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                    if(mRecyclerView != null) {
+                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
+                        mAdapter.notifyDataSetChanged();
+                        if(mAdapter.getItemCount() > 0) {
+                            mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                        }
+                    }
                 }
             });
         }
