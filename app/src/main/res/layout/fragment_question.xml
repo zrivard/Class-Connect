@@ -23,7 +23,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<<<<<<< Updated upstream
     <android.support.design.widget.TextInputEditText
+=======
+    <AutoCompleteTextView
+>>>>>>> Stashed changes
         android:id="@+id/questionTitleInput"
         android:layout_width="363dp"
         android:layout_height="44dp"
@@ -33,13 +37,21 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="160dp"
         android:completionHint="Title"
+<<<<<<< Updated upstream
         android:hint="Title"
+=======
+        android:text="Question Title"
+>>>>>>> Stashed changes
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+<<<<<<< Updated upstream
     <android.support.design.widget.TextInputEditText
+=======
+    <MultiAutoCompleteTextView
+>>>>>>> Stashed changes
         android:id="@+id/questionBodyInput"
         android:layout_width="281dp"
         android:layout_height="136dp"
@@ -49,8 +61,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+<<<<<<< Updated upstream
         android:gravity="start"
         android:hint="Question"
+=======
+        android:text="Question Body"
+        android:gravity="start"
+>>>>>>> Stashed changes
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -59,9 +76,13 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Switch
+<<<<<<< Updated upstream
 
         android:id="@+id/anonQuestionSwitch"
 
+=======
+        android:id="@+id/switch1"
+>>>>>>> Stashed changes
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
@@ -82,7 +103,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
+<<<<<<< Updated upstream
         android:text="Post"
+=======
+        android:text="Button"
+>>>>>>> Stashed changes
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.888"
