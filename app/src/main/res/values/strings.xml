@@ -41,4 +41,7 @@
     <string name="anonymous">Anonymous</string>
     <string name="new_upvote_event">upvote message</string>
     <string name="new_downvote_event">downvote message</string>
+    <string name="questionbody">questionBody</string>
+    <string name="questiontitle">questionTitle</string>
+    <string name="new_question_event">question post</string>
 </resources>

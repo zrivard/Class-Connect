@@ -21,9 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Comment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +74,7 @@ public class HomeFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mRecyclerView = (RecyclerView) getView().findViewById(R.id.activeChatsRecyclerView);
+                mRecyclerView = (RecyclerView) getView().findViewById(R.id.questionsRecyclerView);
                 mAdapter.notifyDataSetChanged();
                 mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
             }
@@ -198,7 +196,7 @@ public class HomeFragment extends Fragment {
     private void createRecyclerView(View v) {
         RecyclerView.LayoutManager mLayoutManager;
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.activeChatsRecyclerView);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.questionsRecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
