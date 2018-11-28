@@ -35,6 +35,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertNotNull;
+import com.github.nkzawa.socketio.client.Socket;
 
 @RunWith(PowerMockRunner.class)
 public class QuestionAdapterTest {
@@ -43,9 +44,10 @@ public class QuestionAdapterTest {
     private FirebaseUser mUser;
     private Context mContext;
     private Classroom mClass;
+    private Socket mSocket;
     @Test
     public void onCreateViewHolder() {
-        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, QList, mUser );
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, QList, mUser, mSocket );
     }
 
     @Test
@@ -57,7 +59,7 @@ public class QuestionAdapterTest {
 
         List<Classroom> filledList = new ArrayList<Classroom>();
         filledList.add(mClass);
-        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, filledList, mUser );
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, filledList, mUser, mSocket );
         assertTrue(sampleAdapter.getItemCount() == 1);
     }
 
@@ -67,7 +69,7 @@ public class QuestionAdapterTest {
         Classroom MockClass = mock(Classroom.class);
         when(MockClass.isActive()).thenReturn(true);
         cList.add(MockClass);
-        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, cList, mUser);
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, QList, mUser, mSocket );
         assertTrue(sampleAdapter.getItemViewType(0) == 1);
     }
 }

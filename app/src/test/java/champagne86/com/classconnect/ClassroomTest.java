@@ -55,7 +55,7 @@ public class ClassroomTest {
 
     @Test
     public void addBlock() {
-        Classroom sampleClass = new Classroom();
+        Classroom sampleClass = new Classroom("thisClass");
        // injectedClass.setActiveDay("1", "2", "3");
         //assertTrue(injectedClass.addBlock("1", "2", "3"));
         String s = "1";

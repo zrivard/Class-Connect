@@ -69,7 +69,7 @@ public class UserTest {
     public void addClass() {
         when(mUser.getUid()).thenReturn("abcdef");
         User sampleUser = new User(mUser, SAMPLENAME);
-        Classroom sampleClass = new Classroom();
+        Classroom sampleClass = new Classroom("className");
         sampleUser.addClass(sampleClass);
     }
 

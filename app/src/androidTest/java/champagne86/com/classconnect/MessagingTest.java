@@ -17,22 +17,25 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
+
 
 @RunWith(AndroidJUnit4.class)
-public class LoginLogout {
+public class MessagingTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void loginLogout() {
+    public void messagingTest() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -41,7 +44,7 @@ public class LoginLogout {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        try{
+        try {
             ViewInteraction loginButton = onView(
                     allOf(withId(R.id.login_button), withText("Continue with Facebook"),
                             childAtPosition(
@@ -55,8 +58,6 @@ public class LoginLogout {
         catch(Exception e){
 
         }
-
-
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -65,17 +66,6 @@ public class LoginLogout {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        ViewInteraction viewGroup = onView(
-                allOf(withId(R.id.toolbar),
-                        childAtPosition(
-                                allOf(withId(R.id.content_frame),
-                                        childAtPosition(
-                                                withId(R.id.drawer_layout),
-                                                0)),
-                                0),
-                        isDisplayed()));
-        viewGroup.check(matches(isDisplayed()));
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("Navigate up"),
@@ -88,18 +78,13 @@ public class LoginLogout {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         ViewInteraction navigationMenuItemView = onView(
                 allOf(childAtPosition(
                         allOf(withId(R.id.design_navigation_view),
                                 childAtPosition(
                                         withId(R.id.nav_view),
                                         0)),
-                        4),
+                        1),
                         isDisplayed()));
         navigationMenuItemView.perform(click());
         try {
@@ -107,56 +92,64 @@ public class LoginLogout {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
-
-
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(android.R.id.button1), withText("Yes"),
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.className), withText("CPEN_321"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.buttonPanel),
-                                        0),
-                                3)));
-        appCompatButton.perform(scrollTo(), click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction button3 = onView(
-                allOf(withId(R.id.login_button),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
+                                        withClassName(is("android.widget.LinearLayout")),
                                         0),
                                 0),
                         isDisplayed()));
-        button3.check(matches(isDisplayed()));
-
+        appCompatTextView.perform(click());
         try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        try{
-            ViewInteraction loginButton = onView(
-                    allOf(withId(R.id.login_button), withText("Continue with Facebook"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(android.R.id.content),
-                                            0),
-                                    0),
-                            isDisplayed()));
-            loginButton.perform(click());
+        ViewInteraction textInputEditText = onView(
+                allOf(withId(R.id.questionTitleInput),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.constraint.ConstraintLayout")),
+                                                1)),
+                                4),
+                        isDisplayed()));
+        textInputEditText.perform(replaceText("Not sure"), closeSoftKeyboard());
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        catch(Exception e){
-
+        ViewInteraction textInputEditText2 = onView(
+                allOf(withId(R.id.questionBodyInput),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.constraint.ConstraintLayout")),
+                                                1)),
+                                3),
+                        isDisplayed()));
+        textInputEditText2.perform(replaceText("T"), closeSoftKeyboard());
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.postQuestionButton), withText("Post"),
+                        childAtPosition(
+                                allOf(withId(R.id.constraintLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.support.constraint.ConstraintLayout")),
+                                                1)),
+                                0),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -178,6 +171,4 @@ public class LoginLogout {
             }
         };
     }
-
-
 }
