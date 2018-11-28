@@ -209,7 +209,7 @@ public class ChatroomFragment extends Fragment {
                 //to see it in action. (It will print all the messages into the log for you)
 
                 //mApiCaller.changeChatRoom(socket, "SOME_QUESTION");
-                //mApiCaller.askQuestion("Question asked now", "CPEN_311", user);
+                //mApiCaller.askQuestion("Question Title", "Question body", "CPEN_311", user.getUid());
                 //mApiCaller.getClassQuestions("CPEN_311");
                 //mApiCaller.getClassroomInfo("CPEN_311");
                 //mApiCaller.getUserClasses(user.getUid());

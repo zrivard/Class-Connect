@@ -171,7 +171,7 @@ public class ApiCaller {
      * @param classroom The classroom in which the question should appear
      * @param user The user that is asking the question
      */
-    public void askQuestion(String questionText, String classroom, FirebaseUser user){
+    public void askQuestion(String questionTitle, String questionBody, String classroom, String userID){
 
         //Create the url that will ask the question
         String url =  mContext.getString(R.string.app_url)
@@ -180,8 +180,9 @@ public class ApiCaller {
         // POST parameters for the request
         JSONObject params = new JSONObject();
         try{
-            params.put("user_id", user.getUid());
-            params.put("question", questionText);
+            params.put("user_id", userID);
+            params.put("body", questionBody);
+            params.put("title", questionTitle);
             params.put("classroom", classroom);
         }catch(JSONException e){
             Log.e(TAG, e.getMessage());

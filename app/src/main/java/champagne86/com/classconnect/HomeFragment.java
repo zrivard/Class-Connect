@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Comment;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +41,11 @@ public class HomeFragment extends Fragment {
     private FragmentActivity homeFrgmt;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    //public  List classList = new ArrayList();
+    public  List<Classroom> classList = new ArrayList<Classroom>();
     public User user = new User();
     private String uid;
     private String userName;
+
 
     private static final String TAG = "AccessUser";
 
@@ -63,6 +65,9 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         homeFrgmt = getActivity();
+        mAdapter = new ClasslistAdapter(homeFrgmt, classList, mUser);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         getClasses();
 
     }
@@ -73,7 +78,7 @@ public class HomeFragment extends Fragment {
             public void run() {
                 mRecyclerView = (RecyclerView) getView().findViewById(R.id.activeChatsRecyclerView);
                 mAdapter.notifyDataSetChanged();
-                // mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
             }
         });
 
@@ -118,20 +123,13 @@ public class HomeFragment extends Fragment {
                     if (document.exists()) {
                         Log.i(TAG, "DocumentSnapshot data: " + document.getData());
 
-                        List classList = new ArrayList();
-                        mAdapter = new ClasslistAdapter(homeFrgmt, classList, mUser);
-                        mRecyclerView.setAdapter(mAdapter);
-                        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
                         Map<String, Object> userDoc = document.getData();
                         HashMap<String, Boolean> strClassMap = (HashMap<String, Boolean>) userDoc.get("enrolledClasses");
                         for (String key : strClassMap.keySet()) {
-
+                            Classroom newclass = new Classroom(key);
+                            classList.add(newclass);
                             if(strClassMap.get(key)) {
-                                Classroom newclass = new Classroom(key);
-                                classList.add(newclass);
-                                updateClassList();
+                                getClassTimes(key);
                             }
 
                             Log.i(TAG, "___________________REACHED________________");
@@ -148,6 +146,53 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void getClassTimes(final String classname){
+
+
+        DocumentReference docRef = mDb.collection("classes").document(classname);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.i(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        Map<String, Object> classDoc = document.getData();
+                        HashMap<String, ArrayList<String>> timeMap = (HashMap<String, ArrayList<String>>) classDoc.get("dayTimeActive");
+
+                        Classroom classroom = null;
+                        for(Classroom c : classList){
+                            if(c.getName().equals(classname)){
+                                classroom = c;
+                                break;
+                            }
+                        }
+
+                        if(classroom == null){
+                            return;
+                        }
+
+                        for (String day : timeMap.keySet()) {
+                            ArrayList<String> times = timeMap.get(day);
+                            for(int i = 0; i < times.size(); i += 2){
+                                classroom.setActiveDay(day, times.get(i), times.get(i+1));
+                            }
+
+                        }
+
+                        updateClassList();
+
+                    } else {
+                        Log.i(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     private void createRecyclerView(View v) {

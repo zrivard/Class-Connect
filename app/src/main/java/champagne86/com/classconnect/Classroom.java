@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.io.SyncFailedException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Calendar;
 
@@ -22,13 +23,9 @@ public class Classroom {
     private Map<String, String[]> dayTimeActive;
 
 
-    public Classroom() {
-
-
-    }
-
     public Classroom(String classname) {
         name = classname;
+        dayTimeActive = new HashMap<String, String[]>();
         isActive = false;
 
     }
@@ -76,30 +73,29 @@ public class Classroom {
     public boolean isActive() {
         //DatabaseReference mDatabase;
 
-        Calendar calendar = Calendar.getInstance();
         String daysArray[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        String dayName = daysArray[dayOfWeek + 1];
+        String dayName = daysArray[dayOfWeek - 1];
         isActive = false;
-//
-//        if (dayTimeActive.containsKey(dayName)) {
-//            SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-//            String curTime = sdf.format(new Date());
-//            int curTimeInt = Integer.parseInt(curTime);
-//
-//            String[] activeTimes = dayTimeActive.get(dayName);
-//
-//            for (int i = 0; i < activeTimes.length - 1; i += 2) {
-//                int startTime = Integer.parseInt(activeTimes[i]);
-//                int endTime = Integer.parseInt(activeTimes[i + 1]);
-//
-//                if (curTimeInt >= startTime && curTimeInt <= endTime) {
-//                    isActive = true;
-//                    break;
-//                }
-//            }
-//
-//        }
+
+        if (dayTimeActive.containsKey(dayName)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+            String curTime = sdf.format(new Date());
+            int curTimeInt = Integer.parseInt(curTime);
+
+            String[] activeTimes = dayTimeActive.get(dayName);
+
+            for (int i = 0; i < activeTimes.length - 1; i += 2) {
+                int startTime = Integer.parseInt(activeTimes[i]);
+                int endTime = Integer.parseInt(activeTimes[i + 1]);
+
+                if (curTimeInt >= startTime && curTimeInt <= endTime) {
+                    isActive = true;
+                    break;
+                }
+            }
+
+        }
 
 
 
