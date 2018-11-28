@@ -4,6 +4,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +44,7 @@ public class ChatroomFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     public static List messageList = new ArrayList();
-    private String questionName;
+    private static String questionName;
     private String classroom;
 
     public static boolean gotMessages = false;
@@ -144,14 +145,33 @@ public class ChatroomFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         chatFrgmt = getActivity();
 
-        Socket mSocket;
-        FirebaseAuth auth;
-        FirebaseUser user;
+        Socket mSocket = null;
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        try{
+            mSocket = IO.socket(getString(R.string.app_url));
+            mSocket.on(getString(R.string.new_msg_event), onNewMessage);
+            mSocket.connect();
+        }catch (URISyntaxException e){
+            Log.e(TAG, e.getMessage());
+        }
+
+        final Socket socket = mSocket;
 
         mApiCaller = new ApiCaller(this.getContext());
+        mApiCaller.changeChatRoom(mSocket, questionName, new ServerCallback() {
+            @Override
+            public void onSuccess() {
+
+                mAdapter = new MessageAdapter(chatFrgmt, messageList, user, socket, chatFrgmt);
+                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+                setupSendMessageButton(socket, user);
+                updateChatUI();
+            }
+        });
 
        // setupLoginButton(auth);
 
@@ -162,24 +182,7 @@ public class ChatroomFragment extends Fragment {
         //messageList = HTTP REQUEST FOR JSON OBJECT
 
         //String room = BASE_APP_URL + "hash";
-        try {
-            mSocket = IO.socket(getString(R.string.app_url));
-            mSocket.on(getString(R.string.new_msg_event), onNewMessage);
-            mSocket.connect();
-            mAdapter = new MessageAdapter(chatFrgmt, messageList, user, mSocket, chatFrgmt);
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            if(!gotMessages){
-                mApiCaller.changeChatRoom(mSocket, questionName, getView());
-            }
-
-            setupSendMessageButton(mSocket, user);
-            updateChatUI();
-        } catch (URISyntaxException e) {
-            Log.e(TAG, "Socket URI error!");
-            Log.e(TAG, "\tError: " +  e.getMessage());
-        }
 
 
     }

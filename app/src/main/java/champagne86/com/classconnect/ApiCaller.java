@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -51,6 +52,7 @@ public class ApiCaller {
 
     private Context mContext;
 
+
     /*
      * ATTENTION - I suggest running each of the functions here at least once
      * so that you can see the format of the JSONObject responses as they will
@@ -65,6 +67,8 @@ public class ApiCaller {
      * - Add a new classroom to the user's class list:  setUserClasses
      * - Add a question to a class:                     askQuestion
      */
+
+
 
 
     public ApiCaller(Context context){
@@ -134,7 +138,7 @@ public class ApiCaller {
      * @param socket The socket we wish to switch over
      * @param newRoom The new room that we wish to enter
      */
-    public void changeChatRoom(final Socket socket, final String newRoom, final View v){
+    public void changeChatRoom(final Socket socket, final String newRoom, final ServerCallback callback){
 
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
@@ -174,23 +178,9 @@ public class ApiCaller {
                             Log.d(TAG, e.getMessage());
                         }
 
-
-                        //QuestionFragment fragment = new QuestionFragment();
-                        ChatroomFragment.gotMessages = true;
                         ChatroomFragment.messageList = messages;
+                        callback.onSuccess();
 
-                        Fragment fragment = null;
-                        Class fragmentClass = ChatroomFragment.class;
-                        try {
-                            fragment = (Fragment) fragmentClass.newInstance();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // Insert the fragment by replacing any existing fragment
-                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
                         //Now that we have the messages, update our socket
                         socket.emit(mContext.getString(R.string.change_room_event), newRoom);
@@ -267,77 +257,71 @@ public class ApiCaller {
      *
      * @param classRoom String name of the class
      */
-    public void getClassQuestions(String classRoom, final View v){
+    public void getClassQuestions(String classRoom, final ServerCallback callback){
 
         //Create the url that will change the chat rooms
-        String url =  mContext.getString(R.string.app_url)
+        final String url =  mContext.getString(R.string.app_url)
                     + mContext.getString(R.string.get_questions_suffix)
                     + classRoom;
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Create the request and what should happen on return
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    Log.d(TAG, response.toString(4));
+                                }catch(JSONException e){
+                                    Log.e(TAG, e.getMessage());
+                                }
 
-        //Create the request and what should happen on return
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d(TAG, response.toString(4));
-                        }catch(JSONException e){
-                            Log.e(TAG, e.getMessage());
-                        }
+                                //ALEX - This is for you
+                                //`response` is a JSONObject containing class requested and
+                                //all of th questions in the class
 
-                        //ALEX - This is for you
-                        //`response` is a JSONObject containing class requested and
-                        //all of th questions in the class
+                                ArrayList<Question> questions = new ArrayList<Question>();
+                                try {
+                                    JSONArray jsonQuestions = response.getJSONArray("Questions");
 
-                        ArrayList<Question> questions = new ArrayList<Question>();
-                        try {
-                            JSONArray jsonQuestions = response.getJSONArray("Questions");
+                                    for (int i = 0; i < jsonQuestions.length(); i++) {
+                                        JSONObject jsonQuestion = (JSONObject)jsonQuestions.get(i);
+                                        questions.add(new Question(
+                                                jsonQuestion.getString("id"),
+                                                jsonQuestion.getString("title"),
+                                                jsonQuestion.getString("body"),
+                                                jsonQuestion.getString("classroom"),
+                                                jsonQuestion.getString("user_id"),
+                                                jsonQuestion.getString("display_name")
+                                        ));
+                                    }
+                                }catch(JSONException e){
+                                    Log.d(TAG, e.getMessage());
+                                }
 
-                            for (int i = 0; i < jsonQuestions.length(); i++) {
-                                JSONObject jsonQuestion = (JSONObject)jsonQuestions.get(i);
-                                questions.add(new Question(
-                                        jsonQuestion.getString("id"),
-                                        jsonQuestion.getString("title"),
-                                        jsonQuestion.getString("body"),
-                                        jsonQuestion.getString("classroom"),
-                                        jsonQuestion.getString("user_id"),
-                                        jsonQuestion.getString("display_name")
-                                ));
+
+
+                                QuestionFragment.questionList = questions;
+                                callback.onSuccess();
+
+
+                                //Call some UI updating function here based on `response`?
                             }
-                        }catch(JSONException e){
-                            Log.d(TAG, e.getMessage());
-                        }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                //Maybe do something?
+                            }
+                        });
 
 
-                        //QuestionFragment fragment = new QuestionFragment();
-                        QuestionFragment.gotMessages = true;
-                        QuestionFragment.questionList = questions;
+                //Add to the queue of requests to be sent
+                mRequestQueue.add(jsonObjectRequest);
+            }
+        }).start();
 
-                        Fragment fragment = null;
-                        Class fragmentClass = QuestionFragment.class;
-                        try {
-                            fragment = (Fragment) fragmentClass.newInstance();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        // Insert the fragment by replacing any existing fragment
-                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-                        //Call some UI updating function here based on `response`?
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Maybe do something?
-                    }
-                });
-
-        //Add to the queue of requests to be sent
-        mRequestQueue.add(jsonObjectRequest);
     }
 
 

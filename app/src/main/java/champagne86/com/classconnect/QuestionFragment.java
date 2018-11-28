@@ -1,12 +1,14 @@
 package champagne86.com.classconnect;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.design.widget.TextInputEditText;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +38,8 @@ import org.w3c.dom.Text;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -44,10 +48,9 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuestionFragment extends Fragment {
+public class QuestionFragment extends Fragment{
 
     private static FragmentActivity questionFrgmt;
-    public static boolean gotMessages = false;
 
     private static final String TAG = QuestionFragment.class.getName();
 
@@ -124,13 +127,13 @@ public class QuestionFragment extends Fragment {
 
             // add the message to view
 
-            Switch anonUser = (Switch) getView().findViewById(R.id.anonQuestionSwitch);
+//            Switch anonUser = (Switch) getView().findViewById(R.id.anonQuestionSwitch);
 
-            if (!anonUser.isChecked()) {
+//            if (!anonUser.isChecked()) {
                 questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
-            } else {
-                questionList.add(new Question(questionId, title, body, classroom, senderId, "Anonymous"));
-            }
+//            } else {
+//                questionList.add(new Question(questionId, title, body, classroom, senderId, "Anonymous"));
+//            }
 
 
             // questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
@@ -165,34 +168,39 @@ public class QuestionFragment extends Fragment {
         mApiCaller = new ApiCaller(this.getContext());
 
 
-        if(!gotMessages){
-            mApiCaller.getClassQuestions(classroomName, getView());
-        }
+
+        mApiCaller.getClassQuestions(classroomName, new ServerCallback() {
+            @Override
+            public void onSuccess() {
+                questionFrgmt = getActivity();
+
+                Socket mSocket;
+                FirebaseAuth auth;
+                FirebaseUser user;
+
+                auth = FirebaseAuth.getInstance();
+                user = auth.getCurrentUser();
+
+
+                try {
+                    mSocket = IO.socket(getString(R.string.app_url));
+                    mSocket.on(getString(R.string.new_question_event), onNewMessage);
+                    mSocket.connect();
+                    mAdapter = new QuestionAdapter(questionFrgmt, questionList, user, mSocket);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                    setupSendQuestionButton(mSocket, user);
+                } catch (URISyntaxException e) {
+                    Log.e(TAG, "Socket URI error!");
+                    Log.e(TAG, "\tError: " + e.getMessage());
+                }
+            }
+        });
+
 
         // setupLoginButton(auth);
 
-        questionFrgmt = getActivity();
 
-        Socket mSocket;
-        FirebaseAuth auth;
-        FirebaseUser user;
-
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-
-
-        try {
-            mSocket = IO.socket(getString(R.string.app_url));
-            mSocket.on(getString(R.string.new_question_event), onNewMessage);
-            mSocket.connect();
-            mAdapter = new QuestionAdapter(questionFrgmt, questionList, user, mSocket);
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            setupSendQuestionButton(mSocket, user);
-        } catch (URISyntaxException e) {
-            Log.e(TAG, "Socket URI error!");
-            Log.e(TAG, "\tError: " + e.getMessage());
-        }
 
 
         //messageList = HTTP REQUEST FOR JSON OBJECT
