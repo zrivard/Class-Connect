@@ -96,7 +96,7 @@ public class QuestionFragment extends Fragment {
                 classroom = data.getString("classroom");
                 title = data.getString("title");
                 body = data.getString("body");
-                questionId = data.getString("question_id");
+                questionId = data.getString("id");
             } catch (JSONException e) {
                 Log.i("Error", "ERROR");
             }
