@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 
 
 import com.github.nkzawa.emitter.Emitter;
@@ -68,9 +71,12 @@ public class ChatroomFragment extends Fragment {
             JSONObject data;
             String senderId = "";
             String message = "";
-            String senderDisplayName= "";
+
+            String senderDisplayName = "";
+            String thisId = "";
+
+
             String questionID= "";
-            int thisId = 0;
 
             try {
                 if(args[0].getClass().equals(JSONObject.class)){
@@ -84,10 +90,25 @@ public class ChatroomFragment extends Fragment {
                 senderDisplayName = data.getString("display_name");
                 senderId = data.getString("user_id");
                 message = data.getString("message");
+
+                thisId = data.getString("message_id");
                 questionID = data.getString("question_id");
             } catch (JSONException e) {
-                Log.e(TAG, e.getMessage());
+                Log.i("Error", "ERROR");
             }
+
+                    // add the message to view
+            Switch anonUser = (Switch) getView().findViewById(R.id.anonUserSwitch);
+
+            if (!anonUser.isChecked()) {
+                messageList.add(new Message(thisId, message, senderId, senderDisplayName));
+            }
+            else {
+                messageList.add(new Message(thisId, message, senderId, "Anonymous User"));
+            }
+
+
+
 
             // add the message to view (sanity check that the message was for this room
             String currentQuestion = "SOME_QUESTION";
@@ -130,9 +151,7 @@ public class ChatroomFragment extends Fragment {
 
        // setupLoginButton(auth);
 
-        mAdapter = new MessageAdapter(chatFrgmt, messageList, user);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
         //messageList = HTTP REQUEST FOR JSON OBJECT
 
@@ -141,11 +160,15 @@ public class ChatroomFragment extends Fragment {
             mSocket = IO.socket(getString(R.string.app_url));
             mSocket.on(getString(R.string.new_msg_event), onNewMessage);
             mSocket.connect();
+            mAdapter = new MessageAdapter(chatFrgmt, messageList, user, mSocket, chatFrgmt);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             setupSendMessageButton(mSocket, user);
         } catch (URISyntaxException e) {
             Log.e(TAG, "Socket URI error!");
             Log.e(TAG, "\tError: " +  e.getMessage());
         }
+
 
     }
 
@@ -158,19 +181,7 @@ public class ChatroomFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-//    private void setupLoginButton(final FirebaseAuth auth){
-//        LoginButton loginButton = v.findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("email", "public_profile");
-//
-//        loginButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View V) {
-//
-//                signOut(auth);
-//            }
-//
-//        });
-//    }
+
 
     private void setupSendMessageButton(final Socket socket, final FirebaseUser user){
 
