@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
+    android:background="@drawable/com_facebook_auth_dialog_background"
     tools:context=".ChatroomFragment">
 
     <Button
         android:id="@+id/sendMsgButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="111dp"
+        android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -56,7 +57,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/chatMsgInputLayout"
-        android:layout_width="253dp"
+        android:layout_width="227dp"
         android:layout_height="67dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -85,6 +86,20 @@
             android:inputType="textMultiLine|textLongMessage"
             android:singleLine="false" />
     </android.support.design.widget.TextInputLayout>
+
+    <Switch
+        android:id="@+id/anonUserSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/anonymous"
+        app:layout_constraintBottom_toTopOf="@+id/sendMsgButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chatMsgInputLayout" />
 
 
 </android.support.constraint.ConstraintLayout>
