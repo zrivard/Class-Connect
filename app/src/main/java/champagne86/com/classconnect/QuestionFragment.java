@@ -13,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +71,11 @@ public class QuestionFragment extends Fragment{
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
 
         Bundle bundle = getArguments();
         if(bundle != null) {
@@ -161,6 +162,7 @@ public class QuestionFragment extends Fragment{
     }
 
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -196,6 +198,7 @@ public class QuestionFragment extends Fragment{
                 }
             }
         });
+
 
 
         // setupLoginButton(auth);

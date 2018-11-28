@@ -110,7 +110,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("TAG").commit();
 
     }
 
@@ -119,9 +119,7 @@ public class HomeActivity extends AppCompatActivity {
         Fragment fragment = null;
         Class fragmentClass;
         switch(menuItem.getItemId()) {
-            case R.id.nav_chatrooms:
-                fragmentClass = ChatroomFragment.class;
-                break;
+
             case R.id.nav_home:
                 fragmentClass = HomeFragment.class;
                 break;
@@ -163,6 +161,19 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
+    }
     private void signOutConfirm() {
 
 

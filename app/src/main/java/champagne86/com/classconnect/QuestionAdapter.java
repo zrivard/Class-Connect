@@ -17,8 +17,19 @@ import android.widget.TextView;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+
 import com.google.api.Distribution;
 import com.google.common.io.LineReader;
+
+
+
+import com.google.api.Distribution;
+import com.google.common.io.LineReader;
+
+
+
+
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -113,7 +124,7 @@ public class QuestionAdapter extends RecyclerView.Adapter {
                 // Insert the fragment by replacing any existing fragment
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("TAG").commit();
                 return;
             }
         });

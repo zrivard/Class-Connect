@@ -3,10 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="Home" />
-        <item
-            android:id="@+id/nav_chatrooms"
-            android:title="@string/chatrooms" />
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_settings"
             android:title="@string/settings" />

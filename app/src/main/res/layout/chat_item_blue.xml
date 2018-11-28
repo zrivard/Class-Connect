@@ -39,7 +39,8 @@
             android:gravity="left"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Upvotes" />
+            android:text="Upvotes"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         <TextView
             android:id="@+id/usrID"
@@ -49,7 +50,8 @@
             android:gravity="right"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Username" />
+            android:text="Username"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
     </LinearLayout>
 </LinearLayout>

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/com_facebook_auth_dialog_background">
 
     <LinearLayout
         android:id="@+id/questionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/com_facebook_auth_dialog_background"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -15,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textStyle="bold" />
 
         <TextView
@@ -22,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textStyle="normal" />
 
         <TextView
@@ -30,6 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:text="TextView"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textStyle="italic" />
     </LinearLayout>
 </LinearLayout>

@@ -67,7 +67,7 @@ public class ClasslistAdapter extends RecyclerView.Adapter {
                     // Insert the fragment by replacing any existing fragment
                     AppCompatActivity activity = (AppCompatActivity)v.getContext();
                     FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("TAG").commit();
                     return;
                 }
             });

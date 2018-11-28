@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +66,9 @@ public class HomeFragment extends Fragment {
         mAdapter = new ClasslistAdapter(homeFrgmt, classList, mUser);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        getClasses();
+        if (classList.isEmpty()) {
+            getClasses();
+        }
 
     }
 
@@ -123,9 +126,12 @@ public class HomeFragment extends Fragment {
                         Map<String, Object> userDoc = document.getData();
                         HashMap<String, Boolean> strClassMap = (HashMap<String, Boolean>) userDoc.get("enrolledClasses");
                         for (String key : strClassMap.keySet()) {
-                            Classroom newclass = new Classroom(key);
+
                             if(strClassMap.get(key)) {
-                                classList.add(newclass);
+                                Classroom newclass = new Classroom(key);
+                                if (!classList.contains(newclass)) {
+                                    classList.add(newclass);
+                                }
                                 getClassTimes(key);
                             }
 

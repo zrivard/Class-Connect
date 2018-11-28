@@ -32,7 +32,8 @@
             android:layout_gravity="left"
             android:gravity="left"
             android:paddingLeft="10dp"
-            android:text="Username" />
+            android:text="Username"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         <ImageView
             android:id="@+id/upvoteIcon"
@@ -47,7 +48,8 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:paddingRight="10dp"
-            android:text="Upvotes" />
+            android:text="Upvotes"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
     </LinearLayout>
 

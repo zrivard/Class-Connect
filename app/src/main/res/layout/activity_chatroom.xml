@@ -84,7 +84,8 @@
             android:hint="@string/message"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine|textLongMessage"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:textColor="@color/common_google_signin_btn_text_light_pressed" />
     </android.support.design.widget.TextInputLayout>
 
     <Switch
@@ -97,6 +98,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/anonymous"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
         app:layout_constraintBottom_toTopOf="@+id/sendMsgButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/chatMsgInputLayout" />
