@@ -125,8 +125,8 @@ public class HomeFragment extends Fragment {
                         HashMap<String, Boolean> strClassMap = (HashMap<String, Boolean>) userDoc.get("enrolledClasses");
                         for (String key : strClassMap.keySet()) {
                             Classroom newclass = new Classroom(key);
-                            classList.add(newclass);
                             if(strClassMap.get(key)) {
+                                classList.add(newclass);
                                 getClassTimes(key);
                             }
 
