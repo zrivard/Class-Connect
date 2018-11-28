@@ -66,11 +66,11 @@ public class ChatroomFragment extends Fragment {
         public void call(final Object... args) {
 
             JSONObject data;
-            String senderId;
-            String message;
-            String senderDisplayName;
-            String questionID;
-            int thisId;
+            String senderId = "";
+            String message = "";
+            String senderDisplayName= "";
+            String questionID= "";
+            int thisId = 0;
 
             try {
                 if(args[0].getClass().equals(JSONObject.class)){
@@ -79,29 +79,34 @@ public class ChatroomFragment extends Fragment {
                     data = new JSONObject((String)args[0]);
                 }
 
+                Log.d(TAG, data.toString(4));
+
                 senderDisplayName = data.getString("display_name");
-                senderId = data.getString("uuid");
+                senderId = data.getString("user_id");
                 message = data.getString("message");
                 questionID = data.getString("question_id");
-                thisId = data.getInt("id");
             } catch (JSONException e) {
-                return;
+                Log.e(TAG, e.getMessage());
             }
 
-            // add the message to view
+            // add the message to view (sanity check that the message was for this room
             String currentQuestion = "SOME_QUESTION";
             if(currentQuestion.equals(questionID)) {
                 messageList.add(new Message(thisId, message, senderId, senderDisplayName));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                    }
+                });
+            }else{
+                Log.d(TAG, questionID);
+                Log.d(TAG, "Got a message destined for another chat room!");
             }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
-                }
-            });
+
 
         }
 
