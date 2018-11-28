@@ -46,6 +46,7 @@ public class QuestionFragment extends Fragment {
     private List questionList = new ArrayList();
     private String clasroomName;
 
+
     private ApiCaller mApiCaller;
 
 
@@ -58,6 +59,7 @@ public class QuestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         Bundle bundle = getArguments();
         clasroomName =  bundle.getString("class");
         return inflater.inflate(R.layout.fragment_question, container, false);
@@ -96,7 +98,9 @@ public class QuestionFragment extends Fragment {
                 classroom = data.getString("classroom");
                 title = data.getString("title");
                 body = data.getString("body");
-                questionId = data.getString("id");
+
+                questionId = data.getString("question_id");
+
             } catch (JSONException e) {
                 Log.i("Error", "ERROR");
             }
@@ -186,13 +190,18 @@ public class QuestionFragment extends Fragment {
         final AutoCompleteTextView titleText = (AutoCompleteTextView) questionFrgmt.findViewById(R.id.questionTitleInput);
         final MultiAutoCompleteTextView bodyText = (MultiAutoCompleteTextView) questionFrgmt.findViewById(R.id.questionBodyInput);
 
+        final Switch anon = (Switch) questionFrgmt.findViewById(R.id.anonQuestionSwitch);
+
+
         sendQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View V) {
 
                 JSONObject args = new JSONObject();
 
-                boolean anon_login = false; //This can be set somewhere?
+
+                boolean anon_login = anon.isChecked(); //This can be set somewhere?
+
                 String display_name = anon_login ? "Anon" : user.getDisplayName();
 
                 try {
@@ -204,6 +213,7 @@ public class QuestionFragment extends Fragment {
 
 
                     //These params will have to be updated
+
                     args.put("classroom", clasroomName);
                     args.put("question_id", "SOME_QUESTION");
                 }

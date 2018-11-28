@@ -43,12 +43,17 @@ public class ChatroomFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List messageList = new ArrayList();
+    private String questionName;
 
     private ApiCaller mApiCaller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        Bundle bundle = getArguments();
+        questionName =  bundle.getString("question");
         return inflater.inflate(R.layout.activity_chatroom, container, false);
     }
 
@@ -208,7 +213,7 @@ public class ChatroomFragment extends Fragment {
 
                     //These params will have to be updated
                     args.put("classroom", "CPEN_311");
-                    args.put("question_id", "SOME_QUESTION");
+                    args.put("question_id", questionName);
                 }
                 catch (JSONException e) { }
 
