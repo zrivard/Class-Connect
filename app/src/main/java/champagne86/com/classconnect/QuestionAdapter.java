@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
@@ -20,11 +22,14 @@ public class QuestionAdapter extends RecyclerView.Adapter {
     private FirebaseUser mUser;
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
+    private Socket mSocket;
 
 
-    public QuestionAdapter(Context context, List questions, FirebaseUser user) {
+    public QuestionAdapter(Context context, List questions, FirebaseUser user, Socket socket) {
         questionList = questions;
         mUser = user;
+        mSocket = socket;
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
