@@ -106,13 +106,13 @@ public class QuestionFragment extends Fragment {
             }
 
             // add the message to view
-            Switch anonUser = (Switch) getView().findViewById(R.id.anonUserSwitch);
+            Switch anonUser = (Switch) getView().findViewById(R.id.anonQuestionSwitch);
 
             if (!anonUser.isChecked()) {
                 questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
             }
             else {
-                questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
+                questionList.add(new Question(questionId, title, body, classroom, senderId, "Anonymous"));
             }
 
 
@@ -200,9 +200,9 @@ public class QuestionFragment extends Fragment {
                 JSONObject args = new JSONObject();
 
 
-                boolean anon_login = anon.isChecked(); //This can be set somewhere?
+                //boolean anon_login = anon.isChecked(); //This can be set somewhere?
 
-                String display_name = anon_login ? "Anon" : user.getDisplayName();
+                String display_name = anon.isChecked() ? "Anon" : user.getDisplayName();
 
                 try {
                     //args.put("id", nextMessageID++);
