@@ -18,6 +18,7 @@ public class ClasslistAdapter extends RecyclerView.Adapter {
 
     private List<Classroom> classList;
     private FirebaseUser mUser;
+
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
 

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         new Handler().postDelayed(new Runnable(){
             @Override
-                    public void run(){
+            public void run(){
                 Intent indexIntent = new Intent(MainActivity.this, IndexActivity.class);
                 startActivity(indexIntent);
                 finish();
