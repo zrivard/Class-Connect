@@ -75,10 +75,10 @@ public class ChatroomFragment extends Fragment {
     }
 
     private void updateChatUI(){
-        getActivity().runOnUiThread(new Runnable() {
+        chatFrgmt.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mRecyclerView = (RecyclerView) getView().findViewById(R.id.dispChatRecyclerView);
+                mRecyclerView = (RecyclerView) chatFrgmt.findViewById(R.id.dispChatRecyclerView);
                 mAdapter.notifyDataSetChanged();
                 if(mAdapter.getItemCount() > 0)
                     mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
