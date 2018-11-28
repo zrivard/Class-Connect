@@ -2,6 +2,7 @@ package champagne86.com.classconnect;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
@@ -30,6 +32,8 @@ import org.w3c.dom.Text;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,7 +103,7 @@ public class QuestionFragment extends Fragment {
                 title = data.getString("title");
                 body = data.getString("body");
 
-                questionId = data.getString("question_id");
+                questionId = data.getString("id");
 
             } catch (JSONException e) {
                 Log.i("Error", "ERROR");
@@ -121,7 +125,7 @@ public class QuestionFragment extends Fragment {
             // add the message to view (sanity check that the message was for this room
             //String currentQuestion = "SOME_QUESTION";
 
-                questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
+               // questionList.add(new Question(questionId, title, body, classroom, senderId, senderDisplayName));
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -187,8 +191,8 @@ public class QuestionFragment extends Fragment {
 
     public void setupSendQuestionButton(final Socket socket, final FirebaseUser user) {
         Button sendQuestion = (Button) questionFrgmt.findViewById(R.id.postQuestionButton);
-        final AutoCompleteTextView titleText = (AutoCompleteTextView) questionFrgmt.findViewById(R.id.questionTitleInput);
-        final MultiAutoCompleteTextView bodyText = (MultiAutoCompleteTextView) questionFrgmt.findViewById(R.id.questionBodyInput);
+        final TextInputEditText titleText = (TextInputEditText) questionFrgmt.findViewById(R.id.questionTitleInput);
+        final TextInputEditText bodyText = (TextInputEditText) questionFrgmt.findViewById(R.id.questionBodyInput);
 
         final Switch anon = (Switch) questionFrgmt.findViewById(R.id.anonQuestionSwitch);
 
@@ -221,6 +225,16 @@ public class QuestionFragment extends Fragment {
 
 
                 socket.emit(getString(R.string.new_question_event), args);
+
+                try  {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+
+                }
+
+                titleText.setText("");
+                bodyText.setText("");
 
             }
         });
