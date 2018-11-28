@@ -21,6 +21,7 @@
     <string name="sign_string_logoutbutton">Sign @string/logoutButton</string>
     <string name="sign_in">Sign In</string>
     <string name="please_login_with_facebook_before_proceeding">Please login with Facebook \n before proceeding</string>
+    <string name="class_is_inactive">Selected class is inactive. Please select an active class</string>
 
     <!-- URLs and their modifiers -->
     <string name="app_url">https://classconnect-220321.appspot.com/</string>

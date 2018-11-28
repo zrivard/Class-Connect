@@ -1,14 +1,21 @@
 package champagne86.com.classconnect;
 
+import android.app.Activity;
 import android.content.Context;
 //import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -16,7 +23,7 @@ import java.util.List;
 
 public class ClasslistAdapter extends RecyclerView.Adapter {
 
-    private List<Classroom> classList;
+    private static List<Classroom> classList;
     private FirebaseUser mUser;
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
@@ -37,7 +44,30 @@ public class ClasslistAdapter extends RecyclerView.Adapter {
             mTextView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    /*remove(position);*/
+                    Classroom classroom = classList.get(getAdapterPosition());
+
+                    if(!classroom.isActive()){
+                        Toast.makeText(v.getContext(), R.string.class_is_inactive, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("class", classroom.getName());
+
+                    Log.d("Selected class:", classroom.getName());
+
+                    Fragment fragment = null;
+                    Class fragmentClass = SettingsFragment.class;
+                    try {
+                        fragment = (Fragment) fragmentClass.newInstance();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    fragment.setArguments(bundle);
+
+                    // Insert the fragment by replacing any existing fragment
+                    AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     return;
                 }
             });

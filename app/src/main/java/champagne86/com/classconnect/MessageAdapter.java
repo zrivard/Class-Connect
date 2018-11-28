@@ -207,7 +207,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
         if (!usrVotedList.contains(user)) {
             mSocket.emit(context.getString(R.string.new_upvote_event), args);
         }
-        else if (usrVotedList.contains(user)) {
+        else {
             mSocket.emit(context.getString(R.string.new_downvote_event), args);
         }
 
