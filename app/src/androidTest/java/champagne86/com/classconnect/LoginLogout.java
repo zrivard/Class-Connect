@@ -139,6 +139,25 @@ public class LoginLogout {
                         isDisplayed()));
         button3.check(matches(isDisplayed()));
 
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try{
+            ViewInteraction loginButton = onView(
+                    allOf(withId(R.id.login_button), withText("Continue with Facebook"),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(android.R.id.content),
+                                            0),
+                                    0),
+                            isDisplayed()));
+            loginButton.perform(click());
+        }
+        catch(Exception e){
+
+        }
     }
 
     private static Matcher<View> childAtPosition(
@@ -159,4 +178,6 @@ public class LoginLogout {
             }
         };
     }
+
+
 }

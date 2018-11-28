@@ -1,5 +1,7 @@
 package champagne86.com.classconnect;
 
+import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Test;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,20 +37,15 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(PowerMockRunner.class)
-public class ClasslistAdapterTest {
+public class QuestionAdapterTest {
     @Mock
-    private List<Classroom> classList;
+    private List<Classroom> QList;
     private FirebaseUser mUser;
     private Context mContext;
-
-
+    private Classroom mClass;
     @Test
     public void onCreateViewHolder() {
-        ClasslistAdapter sampleAdapter = new ClasslistAdapter( mContext, classList, mUser );
-    }
-
-    @Test
-    public void viewHolder(){
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, QList, mUser );
     }
 
     @Test
@@ -58,29 +55,19 @@ public class ClasslistAdapterTest {
     @Test
     public void getItemCount() {
 
-        ClasslistAdapter sampleAdapter = new ClasslistAdapter( mContext, classList, mUser );
-        assertTrue(sampleAdapter.getItemCount() == 0);
+        List<Classroom> filledList = new ArrayList<Classroom>();
+        filledList.add(mClass);
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, filledList, mUser );
+        assertTrue(sampleAdapter.getItemCount() == 1);
     }
 
     @Test
     public void getItemViewType() {
         List<Classroom> cList = new ArrayList<Classroom>();
         Classroom MockClass = mock(Classroom.class);
-        when(MockClass.isActive()).thenReturn(false);
-        cList.add(MockClass);
-        ClasslistAdapter sampleAdapter = new ClasslistAdapter( mContext, cList, mUser);
-        assertTrue(sampleAdapter.getItemViewType(0) == 0);
-
-    }
-
-    @Test
-    public void getItemViewTypeTrue() {
-        List<Classroom> cList = new ArrayList<Classroom>();
-        Classroom MockClass = mock(Classroom.class);
         when(MockClass.isActive()).thenReturn(true);
         cList.add(MockClass);
-        ClasslistAdapter sampleAdapter = new ClasslistAdapter( mContext, cList, mUser);
+        QuestionAdapter sampleAdapter = new QuestionAdapter( mContext, cList, mUser);
         assertTrue(sampleAdapter.getItemViewType(0) == 1);
-
     }
 }
