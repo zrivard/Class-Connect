@@ -17,13 +17,8 @@ import android.widget.TextView;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
-<<<<<<< Updated upstream
-
 import com.google.api.Distribution;
 import com.google.common.io.LineReader;
-
-=======
->>>>>>> Stashed changes
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;

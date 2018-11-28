@@ -46,16 +46,17 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  */
 public class QuestionFragment extends Fragment {
 
-    private FragmentActivity questionFrgmt;
+    private static FragmentActivity questionFrgmt;
+    public static boolean gotMessages = false;
 
     private static final String TAG = QuestionFragment.class.getName();
 
     private int nextMessageID = 1;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private List questionList = new ArrayList();
+    public static List questionList = new ArrayList();
 
-    private String classroomName;
+    private static String classroomName;
 
 
     private ApiCaller mApiCaller;
@@ -73,7 +74,9 @@ public class QuestionFragment extends Fragment {
 
 
         Bundle bundle = getArguments();
-        classroomName = bundle.getString("class");
+        if(bundle != null) {
+            classroomName = bundle.getString("class");
+        }
         return inflater.inflate(R.layout.fragment_question, container, false);
 
     }
@@ -159,6 +162,15 @@ public class QuestionFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mApiCaller = new ApiCaller(this.getContext());
+
+
+        if(!gotMessages){
+            mApiCaller.getClassQuestions(classroomName, getView());
+        }
+
+        // setupLoginButton(auth);
+
         questionFrgmt = getActivity();
 
         Socket mSocket;
@@ -168,16 +180,7 @@ public class QuestionFragment extends Fragment {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        mApiCaller = new ApiCaller(this.getContext());
 
-        mApiCaller.getClassQuestions(classroomName, mAdapter, questionList);
-
-        // setupLoginButton(auth);
-
-
-        //messageList = HTTP REQUEST FOR JSON OBJECT
-
-        //String room = BASE_APP_URL + "hash";
         try {
             mSocket = IO.socket(getString(R.string.app_url));
             mSocket.on(getString(R.string.new_question_event), onNewMessage);
@@ -190,6 +193,12 @@ public class QuestionFragment extends Fragment {
             Log.e(TAG, "Socket URI error!");
             Log.e(TAG, "\tError: " + e.getMessage());
         }
+
+
+        //messageList = HTTP REQUEST FOR JSON OBJECT
+
+        //String room = BASE_APP_URL + "hash";
+
     }
 
     public void setupSendQuestionButton(final Socket socket, final FirebaseUser user) {

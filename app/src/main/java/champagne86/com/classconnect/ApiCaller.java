@@ -3,8 +3,12 @@ package champagne86.com.classconnect;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -18,8 +22,11 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -226,7 +233,7 @@ public class ApiCaller {
      *
      * @param classRoom String name of the class
      */
-    public void getClassQuestions(String classRoom, RecyclerView.Adapter adapter, List questionList){
+    public void getClassQuestions(String classRoom, final View v){
 
         //Create the url that will change the chat rooms
         String url =  mContext.getString(R.string.app_url)
@@ -249,8 +256,42 @@ public class ApiCaller {
                         //`response` is a JSONObject containing class requested and
                         //all of th questions in the class
 
+                        ArrayList<Question> questions = new ArrayList<Question>();
+                        try {
+                            JSONArray jsonQuestions = response.getJSONArray("Questions");
+
+                            for (int i = 0; i < jsonQuestions.length(); i++) {
+                                JSONObject jsonQuestion = (JSONObject)jsonQuestions.get(i);
+                                questions.add(new Question(
+                                        jsonQuestion.getString("id"),
+                                        jsonQuestion.getString("title"),
+                                        jsonQuestion.getString("body"),
+                                        jsonQuestion.getString("classroom"),
+                                        jsonQuestion.getString("user_id"),
+                                        jsonQuestion.getString("display_name")
+                                ));
+                            }
+                        }catch(JSONException e){
+                            Log.d(TAG, e.getMessage());
+                        }
 
 
+                        //QuestionFragment fragment = new QuestionFragment();
+                        QuestionFragment.gotMessages = true;
+                        QuestionFragment.questionList = questions;
+
+                        Fragment fragment = null;
+                        Class fragmentClass = QuestionFragment.class;
+                        try {
+                            fragment = (Fragment) fragmentClass.newInstance();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        // Insert the fragment by replacing any existing fragment
+                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
                         //Call some UI updating function here based on `response`?
                     }
